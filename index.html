@@ -582,6 +582,9 @@ const T = {
     'game.solve':'👁 Solution',
     'game.attempts':'Tentatives',
     'game.history':'Tentatives précédentes',
+    'result.out':'Sans plus d'essais',
+    'result.win.first':'🎉 Premier essai !',
+    'result.win.attempts':'Résolu en',
   },
   de: {
     'nav.how':'Anleitung','nav.about':'Über uns','nav.contact':'Kontakt','nav.game':'Spiel',
@@ -616,6 +619,9 @@ const T = {
     'game.solve':'👁 Lösung',
     'game.attempts':'Versuche',
     'game.history':'Vorherige Versuche',
+    'result.out':'Keine Versuche mehr',
+    'result.win.first':'🎉 Erster Versuch!',
+    'result.win.attempts':'Gelöst in Versuch',
   },
   it: {
     'nav.how':'Come giocare','nav.about':'Chi siamo','nav.contact':'Contatti','nav.game':'Gioco',
@@ -650,6 +656,9 @@ const T = {
     'game.solve':'👁 Soluzione',
     'game.attempts':'Tentativi',
     'game.history':'Tentativi precedenti',
+    'result.out':'Nessun altro tentativo',
+    'result.win.first':'🎉 Al primo tentativo!',
+    'result.win.attempts':'Risolto al tentativo',
   },
   pt: {
     'nav.how':'Como jogar','nav.about':'Sobre','nav.contact':'Contato','nav.game':'Jogo',
@@ -684,6 +693,9 @@ const T = {
     'game.solve':'👁 Solução',
     'game.attempts':'Tentativas',
     'game.history':'Tentativas anteriores',
+    'result.out':'Sem mais tentativas',
+    'result.win.first':'🎉 Primeira tentativa!',
+    'result.win.attempts':'Resolvido na tentativa',
   },
   zh: {
     'nav.how':'如何游玩','nav.about':'关于','nav.contact':'联系我们','nav.game':'游戏',
@@ -718,6 +730,9 @@ const T = {
     'game.solve':'👁 查看答案',
     'game.attempts':'尝试',
     'game.history':'历史记录',
+    'result.out':'没有更多尝试',
+    'result.win.first':'🎉 第一次就解决了！',
+    'result.win.attempts':'第',
   },
   hi: {
     'nav.how':'कैसे खेलें','nav.about':'हमारे बारे में','nav.contact':'संपर्क','nav.game':'खेल',
@@ -752,6 +767,9 @@ const T = {
     'game.solve':'👁 हल देखें',
     'game.attempts':'प्रयास',
     'game.history':'पिछले प्रयास',
+    'result.out':'और प्रयास नहीं',
+    'result.win.first':'🎉 पहले प्रयास में!',
+    'result.win.attempts':'प्रयास में हल',
   },
   ja: {
     'nav.how':'遊び方','nav.about':'概要','nav.contact':'お問い合わせ','nav.game':'ゲーム',
@@ -786,6 +804,9 @@ const T = {
     'game.solve':'👁 答えを見る',
     'game.attempts':'試行',
     'game.history':'前回の試行',
+    'result.out':'これ以上試行なし',
+    'result.win.first':'🎉 一発で解けた！',
+    'result.win.attempts':'試行で解けた',
   },
 };
 
@@ -1080,7 +1101,9 @@ function renderGame() {
 
   // Target
   gameOver = false;
-  document.getElementById('result-panel').classList.remove('show');
+  const rp = document.getElementById('result-panel');
+  rp.classList.remove('show');
+  rp.style.display = 'none';
   document.getElementById('result-solution').style.display = 'none';
   document.getElementById('target-display').textContent = puzzle.target;
 
