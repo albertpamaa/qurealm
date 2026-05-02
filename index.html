@@ -1200,12 +1200,12 @@ function selectNum(idx) {
 
     // Auto-win: result matches target
     if (Math.abs(currentVal - puzzle.target) < 0.001) {
-      setTimeout(autoWin, 200);
+      autoWin();
       return;
     }
     // Auto-fail: all 4 numbers used and no match
     if (usedSet.size === puzzle.numbers.length) {
-      setTimeout(autoFail, 300);
+      autoFail();
     }
   }
 }
