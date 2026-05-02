@@ -579,6 +579,9 @@ const T = {
     'diff.easy':'Facile','diff.hard':'Difficile',
     'game.cleared':'Effacé','how.step5':'Chaque tentative commence avec le premier chiffre. <strong>Effacer</strong> après avoir commencé compte comme un essai raté.',
     'how.step6':'La série 🔥 compte les jours consécutifs où vous résolvez le puzzle. Sauter un jour la remet à zéro.',
+    'game.solve':'👁 Solution',
+    'game.attempts':'Tentatives',
+    'game.history':'Tentatives précédentes',
   },
   de: {
     'nav.how':'Anleitung','nav.about':'Über uns','nav.contact':'Kontakt','nav.game':'Spiel',
@@ -610,6 +613,9 @@ const T = {
     'diff.easy':'Leicht','diff.hard':'Schwer',
     'game.cleared':'Gelöscht','how.step5':'Jeder Versuch beginnt mit der ersten Zahl. <strong>Löschen</strong> nach dem Start zählt als fehlgeschlagener Versuch.',
     'how.step6':'Die 🔥 Serie zählt aufeinanderfolgende Tage. Einen Tag auslassen setzt sie auf null zurück.',
+    'game.solve':'👁 Lösung',
+    'game.attempts':'Versuche',
+    'game.history':'Vorherige Versuche',
   },
   it: {
     'nav.how':'Come giocare','nav.about':'Chi siamo','nav.contact':'Contatti','nav.game':'Gioco',
@@ -641,6 +647,9 @@ const T = {
     'diff.easy':'Facile','diff.hard':'Difficile',
     'game.cleared':'Cancellato','how.step5':'Ogni tentativo inizia con il primo numero. <strong>Cancellare</strong> dopo aver iniziato conta come tentativo fallito.',
     'how.step6':'La serie 🔥 conta i giorni consecutivi in cui risolvi il puzzle. Saltare un giorno la azzera.',
+    'game.solve':'👁 Soluzione',
+    'game.attempts':'Tentativi',
+    'game.history':'Tentativi precedenti',
   },
   pt: {
     'nav.how':'Como jogar','nav.about':'Sobre','nav.contact':'Contato','nav.game':'Jogo',
@@ -672,6 +681,9 @@ const T = {
     'diff.easy':'Fácil','diff.hard':'Difícil',
     'game.cleared':'Limpo','how.step5':'Cada tentativa começa com o primeiro número. <strong>Limpar</strong> depois de começar conta como falhada.',
     'how.step6':'A sequência 🔥 conta os dias consecutivos. Perder um dia reinicia para zero.',
+    'game.solve':'👁 Solução',
+    'game.attempts':'Tentativas',
+    'game.history':'Tentativas anteriores',
   },
   zh: {
     'nav.how':'如何游玩','nav.about':'关于','nav.contact':'联系我们','nav.game':'游戏',
@@ -703,6 +715,9 @@ const T = {
     'diff.easy':'简单','diff.hard':'困难',
     'game.cleared':'已清除','how.step5':'每次尝试从选第一个数字开始。开始后<strong>清除</strong>算作失败尝试。',
     'how.step6':'🔥 连胜记录连续解题的天数。跳过一天则重置为零。',
+    'game.solve':'👁 查看答案',
+    'game.attempts':'尝试',
+    'game.history':'历史记录',
   },
   hi: {
     'nav.how':'कैसे खेलें','nav.about':'हमारे बारे में','nav.contact':'संपर्क','nav.game':'खेल',
@@ -734,6 +749,9 @@ const T = {
     'diff.easy':'आसान','diff.hard':'कठिन',
     'game.cleared':'साफ़','how.step5':'हर प्रयास पहली संख्या से शुरू होता है। शुरू के बाद <strong>साफ़</strong> करना विफल प्रयास है।',
     'how.step6':'🔥 लकीर लगातार दिनों की गिनती करती है। एक दिन छोड़ने पर शून्य हो जाती है।',
+    'game.solve':'👁 हल देखें',
+    'game.attempts':'प्रयास',
+    'game.history':'पिछले प्रयास',
   },
   ja: {
     'nav.how':'遊び方','nav.about':'概要','nav.contact':'お問い合わせ','nav.game':'ゲーム',
@@ -765,6 +783,9 @@ const T = {
     'diff.easy':'かんたん','diff.hard':'むずかしい',
     'game.cleared':'クリア','how.step5':'各試行は最初の数字を選んだ時に始まります。開始後の<strong>クリア</strong>は失敗とみなされます。',
     'how.step6':'🔥 連続はパズルを解いた連続日数です。一日休むとゼロにリセットされます。',
+    'game.solve':'👁 答えを見る',
+    'game.attempts':'試行',
+    'game.history':'前回の試行',
   },
 };
 
@@ -795,6 +816,8 @@ function saveDiffState() {
     selectedNum, selectedOp,
     currentVal, currentNums: [...currentNums],
     gameOver,
+    resultType: gameOver ? (document.getElementById('result-title').className.includes('win') ? 'win' : 'lose') : null,
+    resultAttempts: attemptNum,
     historyHTML: document.getElementById('history-list').innerHTML,
   };
   localStorage.setItem('qurealm_state_' + difficulty, JSON.stringify(state));
@@ -850,7 +873,14 @@ function setLang(l) {
   document.getElementById('lang-dropdown').classList.remove('show');
   document.getElementById('lang-trigger').classList.remove('open');
   applyTranslations();
-  renderGame();
+  // Only re-render game if not in progress (don't reset state)
+  // Just update date display with new locale
+  if (document.getElementById('puzzle-date') && typeof puzzle !== 'undefined' && puzzle) {
+    const dateObj = new Date();
+    const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    const localeMap = {en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',pt:'pt-BR',zh:'zh-CN',hi:'hi-IN',ja:'ja-JP'};
+    document.getElementById('puzzle-date').textContent = dateObj.toLocaleDateString(localeMap[l] || 'en-US', opts);
+  }
 }
 
 function applyTranslations() {
@@ -1103,7 +1133,11 @@ function renderGame() {
     updateExprDisplay();
     // Show finished state if this difficulty was finished today
     if (gameOver && thisPlayed) {
-      showAlreadyPlayed(stats.lastWon === today);
+      if (savedState.resultType === 'win') {
+        showResult(true, savedState.resultAttempts || attemptNum);
+      } else {
+        showResult(false, savedState.resultAttempts || attemptNum);
+      }
     } else if (!gameOver) {
       doReset();
     }
