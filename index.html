@@ -784,8 +784,8 @@ const LANG_META = {
 };
 
 function saveDiffState() {
-  // Save current in-progress state for this difficulty
   const state = {
+    date: getTodayStr(),
     attemptNum, attemptHistory,
     usedIndices: [...usedIndices],
     steps: [...steps],
@@ -793,8 +793,6 @@ function saveDiffState() {
     currentVal, currentNums: [...currentNums],
     gameOver,
     historyHTML: document.getElementById('history-list').innerHTML,
-    historyVisible: document.getElementById('history-section').style.display,
-    resultVisible: document.getElementById('result-panel').classList.contains('show'),
   };
   localStorage.setItem('qurealm_state_' + difficulty, JSON.stringify(state));
 }
@@ -1070,56 +1068,49 @@ function renderGame() {
   document.getElementById('stat-streak').textContent = stats.streak;
   if (stats.streak > 0) document.getElementById('streak-display').textContent = `🔥 ${stats.streak}`;
 
-  // Try to restore saved state for this difficulty
-  const savedState = loadDiffState(difficulty);
+  // Restore or init state for this difficulty
   const today = getTodayStr();
-  if (savedState && savedState.attemptNum !== undefined) {
-    // Restore in-progress state
-    attemptNum = savedState.attemptNum;
+  const thisPlayed = stats.lastPlayed === today; // Did THIS difficulty get played today?
+
+  const savedState = loadDiffState(difficulty);
+  const hasValidState = savedState && savedState.date === today;
+
+  if (hasValidState) {
+    // Restore saved state from today
+    attemptNum = savedState.attemptNum || 0;
     attemptHistory = savedState.attemptHistory || [];
     usedIndices = savedState.usedIndices || [];
     steps = savedState.steps || [];
-    selectedNum = savedState.selectedNum;
-    selectedOp = savedState.selectedOp;
-    currentVal = savedState.currentVal;
+    selectedNum = savedState.selectedNum !== undefined ? savedState.selectedNum : null;
+    selectedOp = savedState.selectedOp || null;
+    currentVal = savedState.currentVal !== undefined ? savedState.currentVal : null;
     currentNums = savedState.currentNums || [];
-    // Only restore gameOver if this difficulty was actually played today
-    gameOver = (savedState.gameOver && stats.lastPlayed === today) ? true : false;
+    gameOver = savedState.gameOver || false;
     document.getElementById('history-list').innerHTML = savedState.historyHTML || '';
-    document.getElementById('history-section').style.display = savedState.historyVisible || 'none';
+    document.getElementById('history-section').style.display = (savedState.historyHTML ? 'block' : 'none');
     renderAttemptsDots();
     // Restore number button states
     usedIndices.forEach(i => {
       const btn = document.getElementById('num-' + i);
       if (btn) btn.classList.add('used');
     });
-    if (selectedNum !== null) {
-      const btn = document.getElementById('num-' + selectedNum);
-      if (btn) btn.classList.add('selected');
-    }
     updateExprDisplay();
-    // Show result panel only if this difficulty was finished today
-    if (gameOver && stats.lastPlayed === today) {
+    // Show finished state if this difficulty was finished today
+    if (gameOver && thisPlayed) {
       showAlreadyPlayed(stats.lastWon === today);
-    } else if (gameOver) {
-      // State was saved as gameOver but it was a different day - reset
-      gameOver = false;
-      attemptNum = 0;
-      attemptHistory = [];
-      renderAttemptsDots();
-      document.getElementById('history-section').style.display = 'none';
-      document.getElementById('history-list').innerHTML = '';
+    } else if (!gameOver) {
       doReset();
     }
   } else {
-    // Fresh start for this difficulty
+    // Fresh start
     attemptNum = 0;
     attemptHistory = [];
+    gameOver = false;
     renderAttemptsDots();
     document.getElementById('history-section').style.display = 'none';
     document.getElementById('history-list').innerHTML = '';
-    // Check if already played today
-    if (stats.lastPlayed === today) {
+    // Only show already-played if THIS difficulty's stats say played today
+    if (thisPlayed) {
       gameOver = true;
       showAlreadyPlayed(stats.lastWon === today);
     }
@@ -1209,7 +1200,7 @@ function selectNum(idx) {
       return;
     }
     // Auto-fail: no unused numbers left and result doesn't match
-    const unusedCount = puzzle.numbers.length - usedIndices.length;
+    const unusedCount = puzzle.numbers.length - new Set(usedIndices).size;
     if (unusedCount === 0) {
       setTimeout(() => autoFail(), 300);
     }
@@ -1282,6 +1273,12 @@ function doReset() {
 }
 
 function autoWin() {
+  const exprText = steps[0] || '—';
+  const val = currentVal !== null ? Math.round(currentVal * 100) / 100 : puzzle.target;
+  attemptHistory.push({ correct: true, expr: exprText, val });
+  attemptNum++;
+  addHistoryItem(attemptNum, exprText, val, true);
+  renderAttemptsDots();
   const stats = loadStats();
   stats.played++;
   stats.lastPlayed = todayStr;
@@ -1290,11 +1287,10 @@ function autoWin() {
   else if (stats.lastWon !== todayStr) stats.streak = 1;
   stats.lastWon = todayStr;
   saveStats(stats);
-  document.getElementById('stat-played').textContent = stats.played;
-  document.getElementById('stat-won').textContent = stats.won;
-  document.getElementById('stat-streak').textContent = stats.streak;
+  updateStatDisplay(stats);
   gameOver = true;
-  showResult(true, 1);
+  saveDiffState();
+  showResult(true, attemptNum);
   confetti();
 }
 
@@ -1371,6 +1367,7 @@ function checkSolution() {
     saveStats(stats);
     updateStatDisplay(stats);
     gameOver = true;
+    saveDiffState();
     showResult(true, attemptNum);
     confetti();
   } else if (attemptNum >= MAX_ATTEMPTS) {
@@ -1381,6 +1378,7 @@ function checkSolution() {
     saveStats(stats);
     updateStatDisplay(stats);
     gameOver = true;
+    saveDiffState();
     showResult(false, attemptNum);
   } else {
     // FAILED ATTEMPT — reset for next try
