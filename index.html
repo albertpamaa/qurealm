@@ -788,6 +788,7 @@ function saveDiffState() {
     date: getTodayStr(),
     attemptNum, attemptHistory,
     usedIndices: [...usedIndices],
+    usedSetArr: [...usedSet],
     steps: [...steps],
     selectedNum, selectedOp,
     currentVal, currentNums: [...currentNums],
@@ -1047,6 +1048,8 @@ function renderGame() {
 
   // Target
   gameOver = false;
+  document.getElementById('result-panel').classList.remove('show');
+  document.getElementById('result-solution').style.display = 'none';
   document.getElementById('target-display').textContent = puzzle.target;
 
   // Numbers
@@ -1080,6 +1083,7 @@ function renderGame() {
     attemptNum = savedState.attemptNum || 0;
     attemptHistory = savedState.attemptHistory || [];
     usedIndices = savedState.usedIndices || [];
+    usedSet = new Set(savedState.usedSetArr || []);
     steps = savedState.steps || [];
     selectedNum = savedState.selectedNum !== undefined ? savedState.selectedNum : null;
     selectedOp = savedState.selectedOp || null;
@@ -1090,7 +1094,7 @@ function renderGame() {
     document.getElementById('history-section').style.display = (savedState.historyHTML ? 'block' : 'none');
     renderAttemptsDots();
     // Restore number button states
-    usedIndices.forEach(i => {
+    usedSet.forEach(i => {
       const btn = document.getElementById('num-' + i);
       if (btn) btn.classList.add('used');
     });
@@ -1145,24 +1149,24 @@ function renderAttemptsDots() {
 // ============================================================
 // GAME LOGIC
 // ============================================================
-let selectedNum = null;
-let selectedOp = null;
-let currentVal = null;
-let currentNums = [];
-let steps = [];
+let selectedNum = null;   // index of first selected number
+let selectedOp = null;    // selected operator
+let currentVal = null;    // running value after operations
+let usedSet = new Set();  // set of used original number indices
+let steps = [];           // expression string parts
 
 function selectNum(idx) {
   if (gameOver) return;
-  if (usedIndices.includes(idx)) return;
+  if (usedSet.has(idx)) return;
 
   if (selectedNum === null && selectedOp === null) {
-    // First number
+    // First number of this operation
     selectedNum = idx;
     document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected'));
-    document.getElementById(`num-${idx}`).classList.add('selected');
+    document.getElementById('num-' + idx).classList.add('selected');
     currentVal = puzzle.numbers[idx];
-    currentNums = [idx];
-    steps = [`${puzzle.numbers[idx]}`];
+    usedSet.add(idx);
+    steps = [String(puzzle.numbers[idx])];
     updateExprDisplay();
   } else if (selectedOp !== null) {
     // Apply operation
@@ -1177,16 +1181,16 @@ function selectNum(idx) {
       result = a / b;
     }
 
-    usedIndices.push(...currentNums, idx);
-    usedIndices.forEach(i => {
-      document.getElementById(`num-${i}`).classList.add('used');
-      document.getElementById(`num-${i}`).classList.remove('selected');
+    usedSet.add(idx);
+    // Mark all used numbers visually
+    usedSet.forEach(i => {
+      const btn = document.getElementById('num-' + i);
+      if (btn) { btn.classList.add('used'); btn.classList.remove('selected'); }
     });
 
-    const prevExpr = steps.length === 1 ? steps[0] : `(${steps.join(' ')})`;
-    steps = [`${prevExpr} ${selectedOp} ${b}`];
+    const prevExpr = steps[0];
+    steps = ['(' + prevExpr + ' ' + selectedOp + ' ' + b + ')'];
     currentVal = result;
-    currentNums = [...usedIndices];
 
     selectedOp = null;
     selectedNum = null;
@@ -1194,18 +1198,15 @@ function selectNum(idx) {
 
     updateExprDisplay();
 
-    // Auto-check: win if matches target
+    // Auto-win: result matches target
     if (Math.abs(currentVal - puzzle.target) < 0.001) {
-      setTimeout(() => autoWin(), 200);
+      setTimeout(autoWin, 200);
       return;
     }
-    // Auto-fail: no unused numbers left and result doesn't match
-    const unusedCount = puzzle.numbers.length - new Set(usedIndices).size;
-    if (unusedCount === 0) {
-      setTimeout(() => autoFail(), 300);
+    // Auto-fail: all 4 numbers used and no match
+    if (usedSet.size === puzzle.numbers.length) {
+      setTimeout(autoFail, 300);
     }
-
-
   }
 }
 
@@ -1233,7 +1234,7 @@ function updateExprDisplay() {
 
 function clearExpr() {
   // Count as failed attempt only if user already started (picked a number)
-  if (!gameOver && (selectedNum !== null || steps.length > 0)) {
+  if (!gameOver && (usedSet.size > 0 || steps.length > 0)) {
     const exprText = steps[0] || '—';
     const val = currentVal !== null ? Math.round(currentVal * 100) / 100 : '—';
     attemptHistory.push({ correct: false, expr: exprText, val });
@@ -1259,6 +1260,7 @@ function clearExpr() {
 
 function doReset() {
   usedIndices = [];
+  usedSet = new Set();
   selectedNum = null;
   selectedOp = null;
   currentVal = null;
