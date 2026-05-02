@@ -320,7 +320,7 @@
     <div class="result-solution" id="result-solution" style="display:none"></div>
     <button class="share-btn" onclick="shareResult()">📤 <span data-i18n="game.share">Share</span></button>
     <div class="next-timer" id="next-timer"></div>
-  </div>v>
+  </div>
 
   <!-- STATS -->
   <div class="stats-card">
@@ -1538,6 +1538,9 @@ document.querySelectorAll('.lang-option').forEach(opt => {
   opt.classList.toggle('active', opt.getAttribute('onclick') === "setLang('" + lang + "')");
 });
 document.documentElement.lang = lang;
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) applyTranslations();
+});
 renderGame();
 </script>
 </body>
