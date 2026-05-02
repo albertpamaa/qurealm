@@ -1000,11 +1000,11 @@ function getTodayStr() {
 }
 
 function loadStats() {
-  return JSON.parse(localStorage.getItem('qurealm_stats_' + difficulty) || '{"played":0,"won":0,"streak":0,"lastWon":"","lastPlayed":""}');
+  return JSON.parse(localStorage.getItem('qurealm_stats') || '{"played":0,"won":0,"streak":0,"lastWon":"","lastPlayed":""}');
 }
 
 function saveStats(s) {
-  localStorage.setItem('qurealm_stats_' + difficulty, JSON.stringify(s));
+  localStorage.setItem('qurealm_stats', JSON.stringify(s));
 }
 
 function renderGame() {
@@ -1411,10 +1411,9 @@ function shareResult() {
   const won = stats.lastWon === todayStr;
   const attemptsUsed = attemptHistory.length;
   const emoji = won ? '✅' : '❌';
-  const attStr = won ? attemptsUsed + '/5' : 'X/5';
+  const attStr = won ? attemptsUsed + '/10' : 'X/10';
   const dots = attemptHistory.map(h => h.correct ? '🟩' : '🟥').join('');
-  const diffLabel = difficulty === 'easy' ? '🟢 Easy' : '🔴 Hard';
-  const text = `QuRealm ${todayStr} | ${diffLabel}\nTarget: ${puzzle.target} | ${emoji} ${attStr}\n${dots}\nqurealm.com`;
+  const text = `QuRealm ${todayStr}\nTarget: ${puzzle.target} | ${emoji} ${attStr}\n${dots}\nqurealm.com`;
   if (navigator.share) {
     navigator.share({ title: 'QuRealm', text });
   } else {
