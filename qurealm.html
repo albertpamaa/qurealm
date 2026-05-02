@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuRealm — Daily Math Puzzle</title>
+  <meta name="description" content="QuRealm: Daily math puzzle. Use 4 numbers with +, -, ×, ÷ to reach the target. Free, no registration, a new puzzle every day.">
+  <meta property="og:title" content="QuRealm — Daily Math Puzzle">
+  <meta property="og:description" content="Can you reach the target using 4 numbers? A new puzzle every day. Free and global.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://qurealm.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#0d0d14;
+      --surface:#16161f;
+      --surface2:#1e1e2a;
+      --border:#2a2a3a;
+      --text:#f0f0fa;
+      --muted:#8888aa;
+      --hint:#444460;
+      --accent:#e8c547;
+      --accent2:#7c5cbf;
+      --green:#3dd68c;
+      --red:#f05a5a;
+      --blue:#5ab4f0;
+      --radius:12px;
+      --radius-lg:20px;
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+    /* BG GRID */
+    body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.25;pointer-events:none;z-index:0;}
+
+    /* HEADER */
+    header{position:sticky;top:0;z-index:50;background:rgba(13,13,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;}
+    .logo{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.02em;text-decoration:none;}
+    .logo span{color:var(--text);}
+    .header-right{display:flex;align-items:center;gap:12px;}
+    .lang-selector{position:relative;}
+    .lang-trigger{font-family:'Space Grotesk',sans-serif;font-size:13px;padding:6px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+    .lang-trigger:hover{border-color:var(--accent);color:var(--accent);}
+    .lang-trigger .arrow{font-size:10px;transition:transform .2s;color:var(--muted);}
+    .lang-trigger.open .arrow{transform:rotate(180deg);}
+    .lang-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;min-width:170px;z-index:100;opacity:0;transform:translateY(-6px);pointer-events:none;transition:all .2s;box-shadow:0 8px 32px rgba(0,0,0,.4);}
+    .lang-dropdown.show{opacity:1;transform:translateY(0);pointer-events:all;}
+    .lang-option{display:flex;align-items:center;gap:10px;padding:10px 14px;font-size:13px;color:var(--muted);cursor:pointer;transition:all .15s;border:none;background:none;width:100%;font-family:'Space Grotesk',sans-serif;text-align:left;}
+    .lang-option:hover{background:var(--surface2);color:var(--text);}
+    .lang-option.active{color:var(--accent);background:rgba(232,197,71,.06);}
+    .lang-option .flag{font-size:16px;}
+    .lang-option .lang-name{font-weight:500;flex:1;}
+    .lang-option .lang-native{font-size:11px;color:var(--hint);}
+    .nav-links{display:flex;gap:20px;}
+    .nav-link{font-size:13px;color:var(--muted);text-decoration:none;transition:color .15s;}
+    .nav-link:hover{color:var(--text);}
+    @media(max-width:600px){.nav-links{display:none;}}
+
+    /* MAIN */
+    main{position:relative;z-index:1;max-width:580px;margin:0 auto;padding:2rem 1.5rem 6rem;}
+
+    /* HERO */
+    .hero{text-align:center;padding:2.5rem 0 2rem;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(232,197,71,.1);border:1px solid rgba(232,197,71,.3);color:var(--accent);font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;margin-bottom:1.25rem;letter-spacing:.05em;text-transform:uppercase;}
+    .hero h1{font-family:'Space Mono',monospace;font-size:clamp(28px,6vw,48px);font-weight:700;letter-spacing:-.04em;line-height:1.1;margin-bottom:.75rem;}
+    .hero h1 em{font-style:normal;color:var(--accent);}
+    .hero p{font-size:15px;color:var(--muted);max-width:400px;margin:0 auto;line-height:1.7;}
+
+    /* PUZZLE CARD */
+    .puzzle-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.5rem;}
+    .puzzle-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .puzzle-date{font-size:12px;color:var(--muted);font-family:'Space Mono',monospace;}
+    .puzzle-streak{font-size:12px;color:var(--accent);font-weight:600;}
+
+    /* TARGET */
+    .target-section{padding:2rem 1.5rem 1.5rem;text-align:center;}
+    .target-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.75rem;}
+    .target-number{font-family:'Space Mono',monospace;font-size:80px;font-weight:700;color:var(--accent);line-height:1;letter-spacing:-.04em;text-shadow:0 0 60px rgba(232,197,71,.3);}
+
+    /* NUMBERS */
+    .numbers-section{padding:0 1.5rem 1.5rem;}
+    .numbers-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.75rem;text-align:center;}
+    .numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .num-btn{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;padding:18px 8px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;position:relative;}
+    .num-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:rgba(232,197,71,.05);}
+    .num-btn.selected{border-color:var(--accent);background:rgba(232,197,71,.12);color:var(--accent);}
+    .num-btn.used{opacity:.25;cursor:not-allowed;}
+    .num-btn:active:not(:disabled){transform:scale(.96);}
+
+    /* OPERATORS */
+    .operators-section{padding:0 1.5rem 1.5rem;}
+    .operators-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+    .op-btn{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;padding:14px 8px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .15s;}
+    .op-btn:hover{border-color:var(--accent2);color:var(--accent2);}
+    .op-btn.selected{border-color:var(--accent2);background:rgba(124,92,191,.15);color:var(--accent2);}
+    .op-btn:active{transform:scale(.96);}
+
+    /* EXPRESSION */
+    .expr-section{padding:0 1.5rem 1.5rem;}
+    .expr-display{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-family:'Space Mono',monospace;font-size:18px;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+    .expr-text{flex:1;color:var(--text);word-break:break-all;}
+    .expr-text.empty{color:var(--hint);}
+    .expr-result{font-size:14px;font-weight:700;padding:4px 12px;border-radius:20px;flex-shrink:0;}
+    .expr-result.correct{background:rgba(61,214,140,.15);color:var(--green);}
+    .expr-result.wrong{background:rgba(240,90,90,.15);color:var(--red);}
+
+    /* ACTIONS */
+    .actions-section{padding:0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:10px;}
+    .btn-primary{width:100%;padding:16px;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;border:none;border-radius:var(--radius);background:var(--accent);color:#0d0d14;cursor:pointer;transition:all .15s;letter-spacing:.02em;}
+    .btn-primary:hover{opacity:.9;}
+    .btn-primary:active{transform:scale(.98);}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;}
+    .btn-secondary{width:100%;padding:13px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;border:1.5px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;}
+    .btn-secondary:hover{border-color:var(--muted);color:var(--text);}
+    .btns-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+    /* SUCCESS / FAIL */
+    .result-panel{display:none;padding:1.5rem;border-top:1px solid var(--border);text-align:center;}
+    .result-panel.show{display:block;}
+    .result-emoji{font-size:48px;margin-bottom:.75rem;}
+    .result-title{font-size:20px;font-weight:700;margin-bottom:.5rem;}
+    .result-title.win{color:var(--green);}
+    .result-title.lose{color:var(--red);}
+    .result-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:1.25rem;}
+    .result-solution{background:var(--surface2);border-radius:var(--radius);padding:12px 16px;font-family:'Space Mono',monospace;font-size:15px;color:var(--accent);margin-bottom:1.25rem;}
+    .share-btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--surface2);border:1px solid var(--border);border-radius:30px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;}
+    .share-btn:hover{border-color:var(--accent);color:var(--accent);}
+    .next-timer{font-size:13px;color:var(--muted);margin-top:.75rem;font-family:'Space Mono',monospace;}
+
+    /* INSTRUCTIONS */
+    .instructions{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;}
+    .inst-title{font-size:16px;font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+    .steps{display:flex;flex-direction:column;gap:10px;}
+    .step{display:flex;align-items:flex-start;gap:12px;}
+    .step-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#0d0d14;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+    .step-text{font-size:14px;color:var(--muted);line-height:1.6;}
+    .example-box{background:var(--surface2);border-radius:var(--radius);padding:12px 16px;margin-top:1rem;font-family:'Space Mono',monospace;font-size:13px;color:var(--muted);}
+    .example-box span{color:var(--accent);}
+
+    /* STATS */
+    .stats-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1.5rem;}
+    .stats-title{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:1rem;}
+    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .stat-item{text-align:center;}
+    .stat-val{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:var(--accent);}
+    .stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+
+    /* ABOUT / PRIVACY SECTIONS */
+    .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;}
+    .section h2{font-size:18px;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:8px;}
+    .section p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:.75rem;}
+    .section p:last-child{margin-bottom:0;}
+    .section h3{font-size:14px;font-weight:600;margin:1rem 0 .4rem;}
+    .highlight-box{background:rgba(232,197,71,.06);border:1px solid rgba(232,197,71,.2);border-radius:var(--radius);padding:12px 16px;margin:1rem 0;}
+    .highlight-box p{font-size:13px;color:var(--accent);margin:0;font-style:italic;}
+    .email-display{display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;font-family:'Space Mono',monospace;font-size:13px;color:var(--accent);margin-top:.75rem;cursor:pointer;transition:all .15s;}
+    .email-display:hover{border-color:var(--accent);}
+
+    /* TOAST */
+    .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface2);border:1px solid var(--border);border-radius:30px;padding:12px 20px;font-size:14px;font-weight:500;opacity:0;transition:all .3s;z-index:100;white-space:nowrap;pointer-events:none;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    /* FOOTER */
+    footer{position:relative;z-index:1;text-align:center;padding:2rem;font-size:12px;color:var(--hint);border-top:1px solid var(--border);}
+    footer a{color:var(--hint);text-decoration:none;transition:color .15s;}
+    footer a:hover{color:var(--muted);}
+
+    /* CONFETTI */
+    .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:200;}
+    .confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:fall 1.2s ease-in forwards;}
+    @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+    /* MOBILE NAV */
+    .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(22,22,31,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:8px 0 20px;z-index:50;}
+    .mobile-nav-inner{display:flex;justify-content:space-around;}
+    .mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:6px 12px;font-family:'Space Grotesk',sans-serif;transition:color .15s;}
+    .mob-nav-btn.active{color:var(--accent);}
+    .mob-nav-icon{font-size:20px;}
+    @media(max-width:600px){.mobile-nav{display:block;}}
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="#game" class="logo">Qu<span>Realm</span></a>
+  <div class="header-right">
+    <div style="display:flex;gap:6px;">
+      <div class="lang-selector" id="lang-selector">
+        <button class="lang-trigger" id="lang-trigger" onclick="toggleLangDropdown()">
+          <span id="lang-flag">🇬🇧</span>
+          <span id="lang-label">EN</span>
+          <span class="arrow">▼</span>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown">
+          <button class="lang-option active" onclick="setLang('en')"><span class="flag">🇬🇧</span><span class="lang-name">English</span><span class="lang-native">EN</span></button>
+          <button class="lang-option" onclick="setLang('es')"><span class="flag">🇪🇸</span><span class="lang-name">Español</span><span class="lang-native">ES</span></button>
+          <button class="lang-option" onclick="setLang('fr')"><span class="flag">🇫🇷</span><span class="lang-name">Français</span><span class="lang-native">FR</span></button>
+          <button class="lang-option" onclick="setLang('de')"><span class="flag">🇩🇪</span><span class="lang-name">Deutsch</span><span class="lang-native">DE</span></button>
+          <button class="lang-option" onclick="setLang('it')"><span class="flag">🇮🇹</span><span class="lang-name">Italiano</span><span class="lang-native">IT</span></button>
+          <button class="lang-option" onclick="setLang('pt')"><span class="flag">🇧🇷</span><span class="lang-name">Português</span><span class="lang-native">PT</span></button>
+          <button class="lang-option" onclick="setLang('zh')"><span class="flag">🇨🇳</span><span class="lang-name">中文</span><span class="lang-native">ZH</span></button>
+          <button class="lang-option" onclick="setLang('hi')"><span class="flag">🇮🇳</span><span class="lang-name">हिन्दी</span><span class="lang-native">HI</span></button>
+          <button class="lang-option" onclick="setLang('ja')"><span class="flag">🇯🇵</span><span class="lang-name">日本語</span><span class="lang-native">JA</span></button>
+        </div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#how-to-play" class="nav-link" data-i18n="nav.how">How to play</a>
+      <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
+      <a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="hero" id="game">
+    <div class="hero-badge">🧮 <span data-i18n="hero.badge">Daily Puzzle</span></div>
+    <h1>Reach the <em>target</em>.<br>Every day.</h1>
+    <p data-i18n="hero.desc">Use the 4 numbers with +, −, ×, ÷ to reach the target number. One puzzle per day, same for everyone in the world.</p>
+  </div>
+
+  <!-- PUZZLE -->
+  <div class="puzzle-card">
+    <div class="puzzle-header">
+      <span class="puzzle-date" id="puzzle-date">—</span>
+      <span class="puzzle-streak" id="streak-display"></span>
+    </div>
+
+    <div class="target-section">
+      <div class="target-label" data-i18n="game.target">Target</div>
+      <div class="target-number" id="target-display">—</div>
+    </div>
+
+    <div class="numbers-section">
+      <div class="numbers-label" data-i18n="game.yournumbers">Your numbers</div>
+      <div class="numbers-grid" id="numbers-grid"></div>
+    </div>
+
+    <div class="operators-section">
+      <div class="operators-grid">
+        <button class="op-btn" onclick="selectOp('+')">+</button>
+        <button class="op-btn" onclick="selectOp('−')">−</button>
+        <button class="op-btn" onclick="selectOp('×')">×</button>
+        <button class="op-btn" onclick="selectOp('÷')">÷</button>
+      </div>
+    </div>
+
+    <div class="expr-section">
+      <div class="expr-display">
+        <span class="expr-text empty" id="expr-text" data-i18n-placeholder="game.tapnumber">Tap a number to start...</span>
+        <span class="expr-result" id="expr-result" style="display:none"></span>
+      </div>
+    </div>
+
+    <div class="actions-section">
+      <button class="btn-primary" id="btn-check" onclick="checkSolution()" disabled data-i18n="game.check">Check solution</button>
+      <div class="btns-row">
+        <button class="btn-secondary" onclick="clearExpr()" data-i18n="game.clear">Clear</button>
+        <button class="btn-secondary" onclick="showHint()" data-i18n="game.hint">💡 Hint</button>
+      </div>
+    </div>
+
+    <div class="result-panel" id="result-panel">
+      <div class="result-emoji" id="result-emoji"></div>
+      <div class="result-title" id="result-title"></div>
+      <div class="result-desc" id="result-desc"></div>
+      <div class="result-solution" id="result-solution" style="display:none"></div>
+      <button class="share-btn" onclick="shareResult()">📤 <span data-i18n="game.share">Share result</span></button>
+      <div class="next-timer" id="next-timer"></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-card">
+    <div class="stats-title" data-i18n="stats.title">Your stats</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-val" id="stat-played">0</div>
+        <div class="stat-label" data-i18n="stats.played">Played</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="stat-won">0</div>
+        <div class="stat-label" data-i18n="stats.won">Won</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="stat-streak">0</div>
+        <div class="stat-label" data-i18n="stats.streak">🔥 Streak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY -->
+  <div class="instructions" id="how-to-play">
+    <div class="inst-title">📖 <span data-i18n="how.title">How to play</span></div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text" data-i18n="how.step1">Look at the <strong>target number</strong> at the top and the <strong>4 numbers</strong> given below.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text" data-i18n="how.step2">Tap a number, then an operator (+, −, ×, ÷), then another number to build your expression.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text" data-i18n="how.step3">You can use each number <strong>only once</strong>. You don't have to use all 4.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text" data-i18n="how.step4">When your expression equals the target, hit <strong>Check solution</strong>!</div>
+      </div>
+    </div>
+    <div class="example-box">
+      <span data-i18n="how.example">Example: target = </span><span>24</span>, numbers = <span>3, 4, 6, 2</span><br>
+      → <span>3 × (4 + 4) = 24</span> ✓ &nbsp;or&nbsp; <span>6 × 4 = 24</span> ✓
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section" id="about">
+    <h2>🌍 <span data-i18n="about.title">About QuRealm</span></h2>
+    <p data-i18n="about.p1">QuRealm is a free, independent daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same puzzle for every player in the world.</p>
+    <p data-i18n="about.p2">The concept is simple: given 4 numbers, reach a target using basic arithmetic. It sounds easy. It isn't always.</p>
+    <div class="highlight-box">
+      <p data-i18n="about.quote">"Math is the only universal language. QuRealm speaks it daily."</p>
+    </div>
+    <p data-i18n="about.p3">No accounts. No ads (yet). No data collected. Just you, the numbers, and the timer ticking toward tomorrow's puzzle.</p>
+    <p data-i18n="about.p4">QuRealm is built and maintained by a researcher who believes that daily mental exercise — like a puzzle before coffee — is worth something.</p>
+  </div>
+
+  <!-- PRIVACY -->
+  <div class="section" id="privacy">
+    <h2>🔒 <span data-i18n="privacy.title">Privacy Policy</span></h2>
+    <p data-i18n="privacy.p1">QuRealm is designed with privacy by default. We do not collect personal data, require registration, or track individual users.</p>
+    <h3 data-i18n="privacy.h2">What we store</h3>
+    <p data-i18n="privacy.p2">Your game statistics (puzzles played, won, streak) are stored only in your browser's localStorage. This data never leaves your device and is not accessible to us.</p>
+    <h3 data-i18n="privacy.h3">Cookies</h3>
+    <p data-i18n="privacy.p3">QuRealm does not use tracking cookies. In the future, we may use anonymous analytics (e.g. page views). If we do, this policy will be updated.</p>
+    <h3 data-i18n="privacy.h4">Third parties</h3>
+    <p data-i18n="privacy.p4">We use Google Fonts for typography. Google may log requests to its font servers. No other third-party scripts are loaded.</p>
+    <p data-i18n="privacy.p5">Last updated: May 2026.</p>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="section" id="contact">
+    <h2>✉️ <span data-i18n="contact.title">Contact</span></h2>
+    <p data-i18n="contact.p1">Found a bug? Have a suggestion? Want to collaborate? We'd love to hear from you.</p>
+    <p data-i18n="contact.p2">We try to respond within 48 hours.</p>
+    <div class="email-display" onclick="copyEmail()" id="email-display">
+      📬 contact@qurealm.com <span style="font-size:11px;color:var(--muted);margin-left:8px;" data-i18n="contact.copy">copy</span>
+    </div>
+    <p style="margin-top:1rem" data-i18n="contact.p3">We welcome feedback on puzzle difficulty, new language requests, and accessibility improvements.</p>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2026 QuRealm · <a href="#about">About</a> · <a href="#privacy">Privacy</a> · <a href="#contact">Contact</a></p>
+  <p style="margin-top:6px" data-i18n="footer.tagline">A new puzzle every day. Free forever.</p>
+</footer>
+
+<div class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mob-nav-btn active" onclick="scrollTo('#game')"><span class="mob-nav-icon">🧮</span><span data-i18n="nav.game">Game</span></button>
+    <button class="mob-nav-btn" onclick="scrollTo('#how-to-play')"><span class="mob-nav-icon">📖</span><span data-i18n="nav.how">How to play</span></button>
+    <button class="mob-nav-btn" onclick="scrollTo('#about')"><span class="mob-nav-icon">🌍</span><span data-i18n="nav.about">About</span></button>
+    <button class="mob-nav-btn" onclick="scrollTo('#contact')"><span class="mob-nav-icon">✉️</span><span data-i18n="nav.contact">Contact</span></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// TRANSLATIONS
+// ============================================================
+const T = {
+  en: {
+    'nav.how': 'How to play',
+    'nav.about': 'About',
+    'nav.contact': 'Contact',
+    'nav.game': 'Game',
+    'hero.badge': 'Daily Puzzle',
+    'hero.title': 'Reach the <em>target</em>.<br>Every day.',
+    'hero.desc': 'Use the 4 numbers with +, −, ×, ÷ to reach the target number. One puzzle per day, same for everyone in the world.',
+    'game.target': 'Target',
+    'game.yournumbers': 'Your numbers',
+    'game.tapnumber': 'Tap a number to start...',
+    'game.check': 'Check solution',
+    'game.clear': 'Clear',
+    'game.hint': '💡 Hint',
+    'game.share': 'Share result',
+    'stats.title': 'Your stats',
+    'stats.played': 'Played',
+    'stats.won': 'Won',
+    'stats.streak': '🔥 Streak',
+    'how.title': 'How to play',
+    'how.step1': 'Look at the <strong>target number</strong> at the top and the <strong>4 numbers</strong> given below.',
+    'how.step2': 'Tap a number, then an operator (+, −, ×, ÷), then another number to build your expression.',
+    'how.step3': 'You can use each number <strong>only once</strong>. You don\'t have to use all 4.',
+    'how.step4': 'When your expression equals the target, hit <strong>Check solution</strong>!',
+    'how.example': 'Example: target = ',
+    'about.title': 'About QuRealm',
+    'about.p1': 'QuRealm is a free, independent daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same puzzle for every player in the world.',
+    'about.p2': 'The concept is simple: given 4 numbers, reach a target using basic arithmetic. It sounds easy. It isn\'t always.',
+    'about.quote': '"Math is the only universal language. QuRealm speaks it daily."',
+    'about.p3': 'No accounts. No ads (yet). No data collected. Just you, the numbers, and the timer ticking toward tomorrow\'s puzzle.',
+    'about.p4': 'QuRealm is built and maintained by a researcher who believes that daily mental exercise — like a puzzle before coffee — is worth something.',
+    'privacy.title': 'Privacy Policy',
+    'privacy.p1': 'QuRealm is designed with privacy by default. We do not collect personal data, require registration, or track individual users.',
+    'privacy.h2': 'What we store',
+    'privacy.p2': 'Your game statistics (puzzles played, won, streak) are stored only in your browser\'s localStorage. This data never leaves your device and is not accessible to us.',
+    'privacy.h3': 'Cookies',
+    'privacy.p3': 'QuRealm does not use tracking cookies. In the future, we may use anonymous analytics (e.g. page views). If we do, this policy will be updated.',
+    'privacy.h4': 'Third parties',
+    'privacy.p4': 'We use Google Fonts for typography. Google may log requests to its font servers. No other third-party scripts are loaded.',
+    'privacy.p5': 'Last updated: May 2026.',
+    'contact.title': 'Contact',
+    'contact.p1': 'Found a bug? Have a suggestion? Want to collaborate? We\'d love to hear from you.',
+    'contact.p2': 'We try to respond within 48 hours.',
+    'contact.copy': 'copy',
+    'contact.p3': 'We welcome feedback on puzzle difficulty, new language requests, and accessibility improvements.',
+    'footer.tagline': 'A new puzzle every day. Free forever.',
+    'result.win': '🎉 Solved it!',
+    'result.lose': '😅 Not today',
+    'result.win.desc': 'Great job! You found a valid solution.',
+    'result.lose.desc': 'Better luck tomorrow! Here\'s one solution:',
+    'result.next': 'Next puzzle in:',
+    'hint.msg': 'Try to make ',
+    'copied': 'Copied!',
+    'already.played': 'You already played today! Come back tomorrow.',
+  },
+  es: {
+    'nav.how': 'Cómo jugar',
+    'nav.about': 'Acerca de',
+    'nav.contact': 'Contacto',
+    'nav.game': 'Juego',
+    'hero.badge': 'Puzzle Diario',
+    'hero.title': 'Llega al <em>objetivo</em>.<br>Cada día.',
+    'hero.desc': 'Usa los 4 números con +, −, ×, ÷ para llegar al número objetivo. Un puzzle al día, igual para todos en el mundo.',
+    'game.target': 'Objetivo',
+    'game.yournumbers': 'Tus números',
+    'game.tapnumber': 'Toca un número para empezar...',
+    'game.check': 'Comprobar solución',
+    'game.clear': 'Borrar',
+    'game.hint': '💡 Pista',
+    'game.share': 'Compartir resultado',
+    'stats.title': 'Tus estadísticas',
+    'stats.played': 'Jugados',
+    'stats.won': 'Ganados',
+    'stats.streak': '🔥 Racha',
+    'how.title': 'Cómo jugar',
+    'how.step1': 'Mira el <strong>número objetivo</strong> arriba y los <strong>4 números</strong> dados abajo.',
+    'how.step2': 'Toca un número, luego un operador (+, −, ×, ÷), luego otro número para construir tu expresión.',
+    'how.step3': 'Puedes usar cada número <strong>solo una vez</strong>. No tienes que usarlos todos.',
+    'how.step4': 'Cuando tu expresión iguale el objetivo, ¡pulsa <strong>Comprobar solución</strong>!',
+    'how.example': 'Ejemplo: objetivo = ',
+    'about.title': 'Sobre QuRealm',
+    'about.p1': 'QuRealm es un puzzle matemático diario gratuito e independiente. Cada día a medianoche UTC se genera un nuevo puzzle, el mismo para todos los jugadores del mundo.',
+    'about.p2': 'El concepto es sencillo: dados 4 números, llega a un objetivo usando aritmética básica. Parece fácil. No siempre lo es.',
+    'about.quote': '"Las matemáticas son el único idioma universal. QuRealm las habla cada día."',
+    'about.p3': 'Sin cuentas. Sin publicidad (de momento). Sin datos recogidos. Solo tú, los números y el tiempo corriendo hacia el puzzle de mañana.',
+    'about.p4': 'QuRealm está creado y mantenido por un investigador que cree que el ejercicio mental diario — como un puzzle antes del café — vale la pena.',
+    'privacy.title': 'Política de Privacidad',
+    'privacy.p1': 'QuRealm está diseñado con privacidad por defecto. No recopilamos datos personales, no requerimos registro ni rastreamos usuarios individuales.',
+    'privacy.h2': 'Qué almacenamos',
+    'privacy.p2': 'Tus estadísticas de juego (puzzles jugados, ganados, racha) se guardan únicamente en el localStorage de tu navegador. Estos datos nunca salen de tu dispositivo.',
+    'privacy.h3': 'Cookies',
+    'privacy.p3': 'QuRealm no usa cookies de rastreo. En el futuro podríamos usar analíticas anónimas. Si lo hacemos, esta política se actualizará.',
+    'privacy.h4': 'Terceros',
+    'privacy.p4': 'Usamos Google Fonts para la tipografía. Google puede registrar solicitudes a sus servidores de fuentes. No se cargan otros scripts de terceros.',
+    'privacy.p5': 'Última actualización: mayo de 2026.',
+    'contact.title': 'Contacto',
+    'contact.p1': '¿Encontraste un error? ¿Tienes una sugerencia? ¿Quieres colaborar? Nos encantaría saber de ti.',
+    'contact.p2': 'Intentamos responder en un plazo de 48 horas.',
+    'contact.copy': 'copiar',
+    'contact.p3': 'Agradecemos comentarios sobre la dificultad de los puzzles, solicitudes de nuevos idiomas y mejoras de accesibilidad.',
+    'footer.tagline': 'Un puzzle nuevo cada día. Gratis para siempre.',
+    'result.win': '🎉 ¡Resuelto!',
+    'result.lose': '😅 Mañana será',
+    'result.win.desc': '¡Bien hecho! Has encontrado una solución válida.',
+    'result.lose.desc': '¡Suerte mañana! Aquí hay una solución:',
+    'result.next': 'Próximo puzzle en:',
+    'hint.msg': 'Intenta hacer ',
+    'copied': '¡Copiado!',
+    'already.played': '¡Ya jugaste hoy! Vuelve mañana.',
+  },
+  fr: {
+    'nav.how':'Comment jouer','nav.about':'À propos','nav.contact':'Contact','nav.game':'Jeu',
+    'hero.badge':'Puzzle Quotidien','hero.title':'Atteignez la <em>cible</em>.<br>Chaque jour.',
+    'hero.desc':'Utilisez les 4 chiffres avec +, −, ×, ÷ pour atteindre le nombre cible.',
+    'game.target':'Cible','game.yournumbers':'Vos chiffres','game.tapnumber':'Touchez un chiffre...',
+    'game.check':'Vérifier','game.clear':'Effacer','game.hint':'💡 Indice','game.share':'Partager',
+    'stats.title':'Vos stats','stats.played':'Joués','stats.won':'Gagnés','stats.streak':'🔥 Série',
+    'how.title':'Comment jouer',
+    'how.step1':'Regardez le <strong>nombre cible</strong> et les <strong>4 chiffres</strong>.',
+    'how.step2':'Touchez un chiffre, puis un opérateur, puis un autre chiffre.',
+    'how.step3':'Chaque chiffre ne peut être utilisé <strong>qu\'une seule fois</strong>.',
+    'how.step4':'Quand votre expression égale la cible, appuyez sur <strong>Vérifier</strong>!',
+    'how.example':'Exemple: cible = ',
+    'about.title':'À propos','about.p1':'Puzzle quotidien gratuit. Même puzzle pour tous chaque jour.',
+    'about.p2':'Avec 4 chiffres, atteignez une cible.','about.quote':'"Les maths: langue universelle."',
+    'about.p3':'Pas de compte. Pas de pub. Aucune donnée.','about.p4':'Créé par un chercheur.',
+    'privacy.title':'Confidentialité','privacy.p1':'Pas de données personnelles.',
+    'privacy.h2':'Stockage','privacy.p2':'Statistiques dans localStorage uniquement.',
+    'privacy.h3':'Cookies','privacy.p3':'Pas de cookies de suivi.',
+    'privacy.h4':'Tiers','privacy.p4':'Google Fonts uniquement.','privacy.p5':'Mis à jour: mai 2026.',
+    'contact.title':'Contact','contact.p1':'Bug? Suggestion? Écrivez-nous.','contact.p2':'Réponse 48h.',
+    'contact.copy':'copier','contact.p3':'Vos retours sont les bienvenus.',
+    'footer.tagline':'Un nouveau puzzle chaque jour. Gratuit pour toujours.',
+    'result.win':'🎉 Résolu!','result.lose':'😅 Pas aujourd\'hui',
+    'result.win.desc':'Bravo!','result.lose.desc':'Bonne chance demain! Une solution:',
+    'result.next':'Prochain puzzle dans:','hint.msg':'Essayez de faire ','copied':'Copié!',
+    'already.played':'Déjà joué aujourd\'hui! Revenez demain.',
+  },
+  de: {
+    'nav.how':'Anleitung','nav.about':'Über uns','nav.contact':'Kontakt','nav.game':'Spiel',
+    'hero.badge':'Tägliches Rätsel','hero.title':'Erreiche das <em>Ziel</em>.<br>Jeden Tag.',
+    'hero.desc':'Verwende die 4 Zahlen mit +, −, ×, ÷ um die Zielzahl zu erreichen.',
+    'game.target':'Ziel','game.yournumbers':'Deine Zahlen','game.tapnumber':'Tippe eine Zahl...',
+    'game.check':'Lösung prüfen','game.clear':'Löschen','game.hint':'💡 Hinweis','game.share':'Teilen',
+    'stats.title':'Statistiken','stats.played':'Gespielt','stats.won':'Gewonnen','stats.streak':'🔥 Serie',
+    'how.title':'Anleitung',
+    'how.step1':'Schau dir die <strong>Zielzahl</strong> und die <strong>4 Zahlen</strong> an.',
+    'how.step2':'Tippe eine Zahl, dann einen Operator, dann eine weitere Zahl.',
+    'how.step3':'Jede Zahl kann <strong>nur einmal</strong> verwendet werden.',
+    'how.step4':'Wenn dein Ausdruck dem Ziel entspricht, drücke <strong>Lösung prüfen</strong>!',
+    'how.example':'Beispiel: Ziel = ',
+    'about.title':'Über QuRealm','about.p1':'Kostenloses tägliches Mathe-Rätsel.',
+    'about.p2':'Erreiche eine Zielzahl mit 4 Zahlen.','about.quote':'"Mathe ist die universelle Sprache."',
+    'about.p3':'Keine Konten. Keine Werbung. Keine Daten.','about.p4':'Von einem Forscher entwickelt.',
+    'privacy.title':'Datenschutz','privacy.p1':'Keine persönlichen Daten.',
+    'privacy.h2':'Speicherung','privacy.p2':'Statistiken nur im localStorage.',
+    'privacy.h3':'Cookies','privacy.p3':'Keine Tracking-Cookies.',
+    'privacy.h4':'Drittanbieter','privacy.p4':'Nur Google Fonts.','privacy.p5':'Stand: Mai 2026.',
+    'contact.title':'Kontakt','contact.p1':'Fehler? Vorschlag? Schreib uns.','contact.p2':'Antwort 48h.',
+    'contact.copy':'kopieren','contact.p3':'Feedback willkommen.',
+    'footer.tagline':'Jeden Tag ein neues Rätsel. Für immer kostenlos.',
+    'result.win':'🎉 Gelöst!','result.lose':'😅 Nicht heute',
+    'result.win.desc':'Gut gemacht!','result.lose.desc':'Viel Glück morgen! Eine Lösung:',
+    'result.next':'Nächstes Rätsel in:','hint.msg':'Versuche ','copied':'Kopiert!',
+    'already.played':'Heute schon gespielt! Morgen wiederkommen.',
+  },
+  it: {
+    'nav.how':'Come giocare','nav.about':'Chi siamo','nav.contact':'Contatti','nav.game':'Gioco',
+    'hero.badge':'Puzzle Quotidiano','hero.title':'Raggiungi il <em>target</em>.<br>Ogni giorno.',
+    'hero.desc':'Usa i 4 numeri con +, −, ×, ÷ per raggiungere il numero target.',
+    'game.target':'Obiettivo','game.yournumbers':'I tuoi numeri','game.tapnumber':'Tocca un numero...',
+    'game.check':'Verifica','game.clear':'Cancella','game.hint':'💡 Suggerimento','game.share':'Condividi',
+    'stats.title':'Statistiche','stats.played':'Giocati','stats.won':'Vinti','stats.streak':'🔥 Serie',
+    'how.title':'Come giocare',
+    'how.step1':'Guarda il <strong>numero obiettivo</strong> e i <strong>4 numeri</strong> dati.',
+    'how.step2':'Tocca un numero, poi un operatore, poi un altro numero.',
+    'how.step3':'Ogni numero può essere usato <strong>una sola volta</strong>.',
+    'how.step4':'Quando l\'espressione eguaglia l\'obiettivo, premi <strong>Verifica</strong>!',
+    'how.example':'Esempio: obiettivo = ',
+    'about.title':'Chi siamo','about.p1':'Puzzle matematico quotidiano gratuito.',
+    'about.p2':'Con 4 numeri raggiungi un obiettivo.','about.quote':'"La matematica è universale."',
+    'about.p3':'Nessun account. Nessuna pubblicità.','about.p4':'Creato da un ricercatore.',
+    'privacy.title':'Privacy','privacy.p1':'Nessun dato personale raccolto.',
+    'privacy.h2':'Archiviazione','privacy.p2':'Statistiche solo in localStorage.',
+    'privacy.h3':'Cookie','privacy.p3':'Nessun cookie di tracciamento.',
+    'privacy.h4':'Terze parti','privacy.p4':'Solo Google Fonts.','privacy.p5':'Aggiornato: maggio 2026.',
+    'contact.title':'Contatti','contact.p1':'Bug? Suggerimenti? Scrivici.','contact.p2':'Risposta 48 ore.',
+    'contact.copy':'copia','contact.p3':'Feedback benvenuto.',
+    'footer.tagline':'Un nuovo puzzle ogni giorno. Gratis per sempre.',
+    'result.win':'🎉 Risolto!','result.lose':'😅 Non oggi',
+    'result.win.desc':'Ottimo!','result.lose.desc':'Buona fortuna domani! Una soluzione:',
+    'result.next':'Prossimo puzzle tra:','hint.msg':'Prova a fare ','copied':'Copiato!',
+    'already.played':'Hai già giocato oggi! Torna domani.',
+  },
+  pt: {
+    'nav.how':'Como jogar','nav.about':'Sobre','nav.contact':'Contato','nav.game':'Jogo',
+    'hero.badge':'Puzzle Diário','hero.title':'Alcance o <em>alvo</em>.<br>Todo dia.',
+    'hero.desc':'Use os 4 números com +, −, ×, ÷ para alcançar o número alvo.',
+    'game.target':'Alvo','game.yournumbers':'Seus números','game.tapnumber':'Toque um número...',
+    'game.check':'Verificar','game.clear':'Limpar','game.hint':'💡 Dica','game.share':'Compartilhar',
+    'stats.title':'Estatísticas','stats.played':'Jogados','stats.won':'Ganhos','stats.streak':'🔥 Sequência',
+    'how.title':'Como jogar',
+    'how.step1':'Veja o <strong>número alvo</strong> e os <strong>4 números</strong> dados.',
+    'how.step2':'Toque um número, depois um operador, depois outro número.',
+    'how.step3':'Cada número pode ser usado <strong>apenas uma vez</strong>.',
+    'how.step4':'Quando a expressão igualar o alvo, clique em <strong>Verificar</strong>!',
+    'how.example':'Exemplo: alvo = ',
+    'about.title':'Sobre QuRealm','about.p1':'Puzzle matemático diário gratuito.',
+    'about.p2':'Com 4 números alcance um alvo.','about.quote':'"Matemática é linguagem universal."',
+    'about.p3':'Sem contas. Sem anúncios.','about.p4':'Criado por um pesquisador.',
+    'privacy.title':'Privacidade','privacy.p1':'Nenhum dado pessoal coletado.',
+    'privacy.h2':'Armazenamento','privacy.p2':'Estatísticas apenas no localStorage.',
+    'privacy.h3':'Cookies','privacy.p3':'Sem cookies de rastreamento.',
+    'privacy.h4':'Terceiros','privacy.p4':'Apenas Google Fonts.','privacy.p5':'Atualizado: maio 2026.',
+    'contact.title':'Contato','contact.p1':'Bug? Sugestão? Escreva.','contact.p2':'Resposta em 48h.',
+    'contact.copy':'copiar','contact.p3':'Feedback bem-vindo.',
+    'footer.tagline':'Um novo puzzle todo dia. Grátis para sempre.',
+    'result.win':'🎉 Resolvido!','result.lose':'😅 Não hoje',
+    'result.win.desc':'Ótimo!','result.lose.desc':'Boa sorte amanhã! Uma solução:',
+    'result.next':'Próximo puzzle em:','hint.msg':'Tente fazer ','copied':'Copiado!',
+    'already.played':'Já jogou hoje! Volte amanhã.',
+  },
+  zh: {
+    'nav.how':'如何游玩','nav.about':'关于','nav.contact':'联系我们','nav.game':'游戏',
+    'hero.badge':'每日谜题','hero.title':'达到<em>目标</em>。<br>每天挑战。',
+    'hero.desc':'用4个数字和 +, −, ×, ÷ 运算达到目标数。每天一个谜题，全球同步。',
+    'game.target':'目标','game.yournumbers':'你的数字','game.tapnumber':'点击数字开始...',
+    'game.check':'检查答案','game.clear':'清除','game.hint':'💡 提示','game.share':'分享结果',
+    'stats.title':'你的统计','stats.played':'已玩','stats.won':'获胜','stats.streak':'🔥 连胜',
+    'how.title':'如何游玩',
+    'how.step1':'查看<strong>目标数字</strong>和<strong>4个数字</strong>。',
+    'how.step2':'点击数字，选择运算符，再点击另一个数字。',
+    'how.step3':'每个数字<strong>只能使用一次</strong>。',
+    'how.step4':'算式等于目标时点击<strong>检查答案</strong>！',
+    'how.example':'示例：目标 = ',
+    'about.title':'关于 QuRealm','about.p1':'免费每日数学谜题。UTC午夜同步。',
+    'about.p2':'用4个数字达到目标。','about.quote':'"数学是通用语言。"',
+    'about.p3':'无账户，无广告，不收集数据。','about.p4':'由研究员创建。',
+    'privacy.title':'隐私政策','privacy.p1':'不收集个人数据。',
+    'privacy.h2':'存储内容','privacy.p2':'仅在localStorage存储统计。',
+    'privacy.h3':'Cookie','privacy.p3':'不使用跟踪Cookie。',
+    'privacy.h4':'第三方','privacy.p4':'仅Google Fonts。','privacy.p5':'更新：2026年5月。',
+    'contact.title':'联系我们','contact.p1':'错误？建议？欢迎联系。','contact.p2':'48小时内回复。',
+    'contact.copy':'复制','contact.p3':'欢迎反馈。',
+    'footer.tagline':'每天一个新谜题。永久免费。',
+    'result.win':'🎉 解决了！','result.lose':'😅 今天没成功',
+    'result.win.desc':'干得好！','result.lose.desc':'明天加油！解法：',
+    'result.next':'下一个谜题：','hint.msg':'试试先做 ','copied':'已复制！',
+    'already.played':'今天已经玩过了！明天再来。',
+  },
+  hi: {
+    'nav.how':'कैसे खेलें','nav.about':'हमारे बारे में','nav.contact':'संपर्क','nav.game':'खेल',
+    'hero.badge':'दैनिक पहेली','hero.title':'<em>लक्ष्य</em> तक पहुँचें।<br>हर दिन।',
+    'hero.desc':'4 संख्याओं और +, −, ×, ÷ से लक्ष्य तक पहुँचें।',
+    'game.target':'लक्ष्य','game.yournumbers':'संख्याएँ','game.tapnumber':'संख्या दबाएँ...',
+    'game.check':'हल जाँचें','game.clear':'साफ़ करें','game.hint':'💡 संकेत','game.share':'साझा करें',
+    'stats.title':'आँकड़े','stats.played':'खेले','stats.won':'जीते','stats.streak':'🔥 लकीर',
+    'how.title':'कैसे खेलें',
+    'how.step1':'<strong>लक्ष्य</strong> और <strong>4 संख्याएँ</strong> देखें।',
+    'how.step2':'संख्या, ऑपरेटर, फिर संख्या दबाएँ।',
+    'how.step3':'हर संख्या <strong>एक बार</strong> उपयोग करें।',
+    'how.step4':'लक्ष्य बराबर होने पर <strong>हल जाँचें</strong> दबाएँ!',
+    'how.example':'उदाहरण: लक्ष्य = ',
+    'about.title':'QuRealm के बारे में','about.p1':'मुफ़्त दैनिक गणित पहेली।',
+    'about.p2':'4 संख्याओं से लक्ष्य तक।','about.quote':'"गणित सार्वभौमिक भाषा है।"',
+    'about.p3':'कोई खाता नहीं, विज्ञापन नहीं।','about.p4':'एक शोधकर्ता द्वारा।',
+    'privacy.title':'गोपनीयता','privacy.p1':'कोई व्यक्तिगत डेटा नहीं।',
+    'privacy.h2':'संग्रहण','privacy.p2':'localStorage में आँकड़े।',
+    'privacy.h3':'कुकीज़','privacy.p3':'ट्रैकिंग कुकीज़ नहीं।',
+    'privacy.h4':'तृतीय पक्ष','privacy.p4':'केवल Google Fonts।','privacy.p5':'अपडेट: मई 2026।',
+    'contact.title':'संपर्क','contact.p1':'बग? सुझाव? लिखें।','contact.p2':'48 घंटे में जवाब।',
+    'contact.copy':'कॉपी','contact.p3':'फ़ीडबैक स्वागत है।',
+    'footer.tagline':'हर दिन नई पहेली। हमेशा मुफ़्त।',
+    'result.win':'🎉 हल हो गया!','result.lose':'😅 आज नहीं',
+    'result.win.desc':'शाबाश!','result.lose.desc':'कल फिर! एक हल:',
+    'result.next':'अगली पहेली:','hint.msg':'पहले बनाएँ ','copied':'कॉपी हो गया!',
+    'already.played':'आज खेल चुके हैं! कल आएँ।',
+  },
+  ja: {
+    'nav.how':'遊び方','nav.about':'概要','nav.contact':'お問い合わせ','nav.game':'ゲーム',
+    'hero.badge':'デイリーパズル','hero.title':'<em>目標</em>に到達せよ。<br>毎日挑戦。',
+    'hero.desc':'4つの数字と +, −, ×, ÷ を使って目標の数に到達してください。',
+    'game.target':'目標','game.yournumbers':'あなたの数字','game.tapnumber':'数字をタップ...',
+    'game.check':'答えを確認','game.clear':'クリア','game.hint':'💡 ヒント','game.share':'シェア',
+    'stats.title':'記録','stats.played':'プレイ数','stats.won':'正解数','stats.streak':'🔥 連続',
+    'how.title':'遊び方',
+    'how.step1':'上の<strong>目標数字</strong>と下の<strong>4つの数字</strong>を確認。',
+    'how.step2':'数字→演算子→数字の順にタップ。',
+    'how.step3':'各数字は<strong>1回のみ</strong>使用可能。',
+    'how.step4':'式が目標と等しくなったら<strong>答えを確認</strong>！',
+    'how.example':'例：目標 = ',
+    'about.title':'QuRealmについて','about.p1':'無料の毎日数学パズル。UTC深夜に新パズル。',
+    'about.p2':'4つの数字で目標に到達。','about.quote':'"数学は共通言語。"',
+    'about.p3':'アカウント不要。広告なし。','about.p4':'研究者が作りました。',
+    'privacy.title':'プライバシー','privacy.p1':'個人データ収集なし。',
+    'privacy.h2':'保存データ','privacy.p2':'localStorageに統計のみ。',
+    'privacy.h3':'クッキー','privacy.p3':'トラッキングクッキーなし。',
+    'privacy.h4':'サードパーティ','privacy.p4':'Google Fontsのみ。','privacy.p5':'更新：2026年5月。',
+    'contact.title':'お問い合わせ','contact.p1':'バグ？提案？ご連絡ください。','contact.p2':'48時間以内。',
+    'contact.copy':'コピー','contact.p3':'フィードバック歓迎。',
+    'footer.tagline':'毎日新しいパズル。永遠に無料。',
+    'result.win':'🎉 解けた！','result.lose':'😅 今日は惜しかった',
+    'result.win.desc':'よくできました！','result.lose.desc':'明日また！解答：',
+    'result.next':'次のパズルまで：','hint.msg':'まず作ってみて ','copied':'コピーしました！',
+    'already.played':'今日はプレイ済み！明日また来てください。',
+  },
+};
+
+let lang = localStorage.getItem('qurealm_lang') || 'en';
+
+function t(key) { return T[lang][key] || T['en'][key] || key; }
+
+const LANG_META = {
+  en: {flag:'🇬🇧', label:'EN'},
+  es: {flag:'🇪🇸', label:'ES'},
+  fr: {flag:'🇫🇷', label:'FR'},
+  de: {flag:'🇩🇪', label:'DE'},
+  it: {flag:'🇮🇹', label:'IT'},
+  pt: {flag:'🇧🇷', label:'PT'},
+  zh: {flag:'🇨🇳', label:'ZH'},
+  hi: {flag:'🇮🇳', label:'HI'},
+  ja: {flag:'🇯🇵', label:'JA'},
+};
+
+function toggleLangDropdown() {
+  const trigger = document.getElementById('lang-trigger');
+  const dropdown = document.getElementById('lang-dropdown');
+  const isOpen = dropdown.classList.contains('show');
+  dropdown.classList.toggle('show', !isOpen);
+  trigger.classList.toggle('open', !isOpen);
+}
+
+document.addEventListener('click', function(e) {
+  const selector = document.getElementById('lang-selector');
+  if (selector && !selector.contains(e.target)) {
+    document.getElementById('lang-dropdown').classList.remove('show');
+    document.getElementById('lang-trigger').classList.remove('open');
+  }
+});
+
+function setLang(l) {
+  lang = l;
+  localStorage.setItem('qurealm_lang', l);
+  document.documentElement.lang = l;
+  // Update trigger display
+  const meta = LANG_META[l] || LANG_META.en;
+  document.getElementById('lang-flag').textContent = meta.flag;
+  document.getElementById('lang-label').textContent = meta.label;
+  // Update active option
+  document.querySelectorAll('.lang-option').forEach(opt => {
+    opt.classList.toggle('active', opt.getAttribute('onclick') === "setLang('" + l + "')");
+  });
+  // Close dropdown
+  document.getElementById('lang-dropdown').classList.remove('show');
+  document.getElementById('lang-trigger').classList.remove('open');
+  applyTranslations();
+  renderGame();
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    el.innerHTML = t(key);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (el.classList.contains('empty')) el.textContent = t(key);
+  });
+  // Update hero
+  document.querySelector('.hero h1').innerHTML = t('hero.title');
+}
+
+// ============================================================
+// PUZZLE GENERATION
+// ============================================================
+
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 1664525 + 1013904223) & 0xffffffff;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function dateToSeed(date) {
+  const d = new Date(date);
+  return d.getFullYear() * 10000 + (d.getMonth()+1) * 100 + d.getDate();
+}
+
+function generatePuzzle(dateStr) {
+  const seed = dateToSeed(dateStr);
+  const rng = seededRandom(seed);
+
+  // Generate numbers 1-9
+  const nums = [];
+  for (let i = 0; i < 4; i++) {
+    nums.push(Math.floor(rng() * 9) + 1);
+  }
+
+  // Find all possible results
+  const results = getAllResults(nums);
+  const validTargets = [...results].filter(r => r >= 10 && r <= 99 && Number.isInteger(r));
+
+  if (validTargets.length === 0) {
+    // Fallback
+    return { numbers: [3, 4, 6, 2], target: 24, solution: '6 × 4 = 24' };
+  }
+
+  // Pick a target using seeded random
+  const idx = Math.floor(rng() * validTargets.length);
+  const target = validTargets[idx];
+  const solution = findSolution(nums, target);
+
+  return { numbers: nums, target, solution };
+}
+
+function getAllResults(nums) {
+  const results = new Set();
+  const ops = ['+', '-', '*', '/'];
+  const perms = permutations(nums);
+
+  for (const perm of perms) {
+    for (const op1 of ops) {
+      for (const op2 of ops) {
+        for (const op3 of ops) {
+          // Try different groupings
+          const [a, b, c, d] = perm;
+          const exprs = [
+            `((${a}${op1}${b})${op2}${c})${op3}${d}`,
+            `(${a}${op1}(${b}${op2}${c}))${op3}${d}`,
+            `(${a}${op1}${b})${op2}(${c}${op3}${d})`,
+            `${a}${op1}((${b}${op2}${c})${op3}${d})`,
+            `${a}${op1}(${b}${op2}(${c}${op3}${d}))`,
+            // also 2 and 3 number combos
+            `${a}${op1}${b}`,
+            `(${a}${op1}${b})${op2}${c}`,
+          ];
+          for (const expr of exprs) {
+            try {
+              const val = safeval(expr);
+              if (val !== null && Number.isFinite(val)) results.add(Math.round(val * 1000) / 1000);
+            } catch(e) {}
+          }
+        }
+      }
+    }
+  }
+  return results;
+}
+
+function safeval(expr) {
+  // Safe evaluate — no division by zero
+  try {
+    if (expr.includes('/0')) return null;
+    const val = Function('"use strict"; return (' + expr + ')')();
+    if (!isFinite(val)) return null;
+    return val;
+  } catch(e) { return null; }
+}
+
+function permutations(arr) {
+  if (arr.length <= 1) return [arr];
+  const result = [];
+  for (let i = 0; i < arr.length; i++) {
+    const rest = [...arr.slice(0, i), ...arr.slice(i+1)];
+    for (const perm of permutations(rest)) {
+      result.push([arr[i], ...perm]);
+    }
+  }
+  return result;
+}
+
+function findSolution(nums, target) {
+  const ops = ['+', '−', '×', '÷'];
+  const rawOps = ['+', '-', '*', '/'];
+  const perms = permutations(nums);
+
+  for (const perm of perms) {
+    for (let o1 = 0; o1 < 4; o1++) {
+      for (let o2 = 0; o2 < 4; o2++) {
+        const [a, b, c] = perm;
+        const expr = `(${a}${rawOps[o1]}${b})${rawOps[o2]}${c}`;
+        const val = safeval(expr);
+        if (val !== null && Math.abs(val - target) < 0.001) {
+          return `(${a} ${ops[o1]} ${b}) ${ops[o2]} ${c} = ${target}`;
+        }
+        // 2 numbers
+        const expr2 = `${a}${rawOps[o1]}${b}`;
+        const val2 = safeval(expr2);
+        if (val2 !== null && Math.abs(val2 - target) < 0.001) {
+          return `${a} ${ops[o1]} ${b} = ${target}`;
+        }
+      }
+      for (let o2 = 0; o2 < 4; o2++) {
+        for (let o3 = 0; o3 < 4; o3++) {
+          const [a,b,c,d] = perm;
+          const exprs = [
+            [`((${a}${rawOps[o1]}${b})${rawOps[o2]}${c})${rawOps[o3]}${d}`, `((${a} ${ops[o1]} ${b}) ${ops[o2]} ${c}) ${ops[o3]} ${d}`],
+            [`(${a}${rawOps[o1]}${b})${rawOps[o2]}(${c}${rawOps[o3]}${d})`, `(${a} ${ops[o1]} ${b}) ${ops[o2]} (${c} ${ops[o3]} ${d})`],
+          ];
+          for (const [raw, pretty] of exprs) {
+            const val = safeval(raw);
+            if (val !== null && Math.abs(val - target) < 0.001) {
+              return `${pretty} = ${target}`;
+            }
+          }
+        }
+      }
+    }
+  }
+  return `— = ${target}`;
+}
+
+// ============================================================
+// GAME STATE
+// ============================================================
+let puzzle = null;
+let usedIndices = [];
+let expression = [];
+let gameOver = false;
+let todayStr = '';
+
+function getTodayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function loadStats() {
+  return JSON.parse(localStorage.getItem('qurealm_stats') || '{"played":0,"won":0,"streak":0,"lastWon":"","lastPlayed":""}');
+}
+
+function saveStats(s) {
+  localStorage.setItem('qurealm_stats', JSON.stringify(s));
+}
+
+function renderGame() {
+  todayStr = getTodayStr();
+  puzzle = generatePuzzle(todayStr);
+
+  // Date display
+  const dateObj = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('puzzle-date').textContent = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', opts);
+
+  // Target
+  document.getElementById('target-display').textContent = puzzle.target;
+
+  // Numbers
+  const grid = document.getElementById('numbers-grid');
+  grid.innerHTML = puzzle.numbers.map((n, i) =>
+    `<button class="num-btn" id="num-${i}" onclick="selectNum(${i})">${n}</button>`
+  ).join('');
+
+  // Stats
+  const stats = loadStats();
+  document.getElementById('stat-played').textContent = stats.played;
+  document.getElementById('stat-won').textContent = stats.won;
+  document.getElementById('stat-streak').textContent = stats.streak;
+  if (stats.streak > 0) document.getElementById('streak-display').textContent = `🔥 ${stats.streak}`;
+
+  // Check if already played today
+  if (stats.lastPlayed === todayStr) {
+    gameOver = true;
+    showAlreadyPlayed(stats.lastWon === todayStr);
+  }
+
+  // Clear expression
+  clearExpr();
+  applyTranslations();
+}
+
+// ============================================================
+// GAME LOGIC
+// ============================================================
+let selectedNum = null;
+let selectedOp = null;
+let currentVal = null;
+let currentNums = [];
+let steps = [];
+
+function selectNum(idx) {
+  if (gameOver) return;
+  if (usedIndices.includes(idx)) return;
+
+  if (selectedNum === null && selectedOp === null) {
+    // First number
+    selectedNum = idx;
+    document.querySelectorAll('.num-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById(`num-${idx}`).classList.add('selected');
+    currentVal = puzzle.numbers[idx];
+    currentNums = [idx];
+    steps = [`${puzzle.numbers[idx]}`];
+    updateExprDisplay();
+  } else if (selectedOp !== null) {
+    // Apply operation
+    const a = currentVal;
+    const b = puzzle.numbers[idx];
+    let result;
+    if (selectedOp === '+') result = a + b;
+    else if (selectedOp === '−') result = a - b;
+    else if (selectedOp === '×') result = a * b;
+    else if (selectedOp === '÷') {
+      if (b === 0) { showToast('÷ 0 not allowed'); return; }
+      result = a / b;
+    }
+
+    usedIndices.push(...currentNums, idx);
+    usedIndices.forEach(i => {
+      document.getElementById(`num-${i}`).classList.add('used');
+      document.getElementById(`num-${i}`).classList.remove('selected');
+    });
+
+    const prevExpr = steps.length === 1 ? steps[0] : `(${steps.join(' ')})`;
+    steps = [`${prevExpr} ${selectedOp} ${b}`];
+    currentVal = result;
+    currentNums = [...usedIndices];
+
+    selectedOp = null;
+    selectedNum = null;
+    document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('selected'));
+
+    updateExprDisplay();
+    document.getElementById('btn-check').disabled = false;
+
+    // Auto-check if all numbers used or result matches
+    if (Math.abs(currentVal - puzzle.target) < 0.001) {
+      document.getElementById('btn-check').classList.add('pulse');
+    }
+  }
+}
+
+function selectOp(op) {
+  if (gameOver) return;
+  if (currentVal === null) { showToast(t('game.tapnumber')); return; }
+  selectedOp = op;
+  document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+}
+
+function updateExprDisplay() {
+  const el = document.getElementById('expr-text');
+  const res = document.getElementById('expr-result');
+  if (steps.length === 0) {
+    el.textContent = t('game.tapnumber');
+    el.classList.add('empty');
+    res.style.display = 'none';
+    return;
+  }
+  el.classList.remove('empty');
+  const expr = selectedOp ? `${steps[0]} ${selectedOp}` : steps[0];
+  el.textContent = expr;
+
+  if (currentVal !== null && selectedOp === null) {
+    res.style.display = 'inline';
+    const rounded = Math.round(currentVal * 100) / 100;
+    res.textContent = `= ${rounded}`;
+    res.className = 'expr-result ' + (Math.abs(currentVal - puzzle.target) < 0.001 ? 'correct' : 'wrong');
+  } else {
+    res.style.display = 'none';
+  }
+}
+
+function clearExpr() {
+  usedIndices = [];
+  selectedNum = null;
+  selectedOp = null;
+  currentVal = null;
+  currentNums = [];
+  steps = [];
+  document.querySelectorAll('.num-btn').forEach(b => { b.classList.remove('used','selected'); });
+  document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('selected'));
+  const el = document.getElementById('expr-text');
+  el.textContent = t('game.tapnumber');
+  el.classList.add('empty');
+  document.getElementById('expr-result').style.display = 'none';
+  document.getElementById('btn-check').disabled = true;
+}
+
+function checkSolution() {
+  if (!currentVal || gameOver) return;
+  const correct = Math.abs(currentVal - puzzle.target) < 0.001;
+  const stats = loadStats();
+  stats.played++;
+  stats.lastPlayed = todayStr;
+
+  if (correct) {
+    stats.won++;
+    if (stats.lastWon === getPreviousDayStr()) stats.streak++;
+    else if (stats.lastWon !== todayStr) stats.streak = 1;
+    stats.lastWon = todayStr;
+    saveStats(stats);
+    showResult(true);
+    confetti();
+  } else {
+    saveStats(stats);
+    showResult(false);
+  }
+  gameOver = true;
+  document.getElementById('stat-played').textContent = stats.played;
+  document.getElementById('stat-won').textContent = stats.won;
+  document.getElementById('stat-streak').textContent = stats.streak;
+}
+
+function getPreviousDayStr() {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function showResult(win) {
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('show');
+  document.getElementById('result-emoji').textContent = win ? '🎉' : '😅';
+  const title = document.getElementById('result-title');
+  title.textContent = t(win ? 'result.win' : 'result.lose');
+  title.className = 'result-title ' + (win ? 'win' : 'lose');
+  document.getElementById('result-desc').textContent = t(win ? 'result.win.desc' : 'result.lose.desc');
+
+  const solEl = document.getElementById('result-solution');
+  if (!win) {
+    solEl.style.display = 'block';
+    solEl.textContent = puzzle.solution;
+  }
+  startNextTimer();
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function showAlreadyPlayed(won) {
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('show');
+  const stats = loadStats();
+  document.getElementById('result-emoji').textContent = won ? '✅' : '📅';
+  const title = document.getElementById('result-title');
+  title.textContent = won ? t('result.win') : t('already.played');
+  title.className = 'result-title ' + (won ? 'win' : '');
+  document.getElementById('result-desc').textContent = t('already.played');
+  startNextTimer();
+  document.querySelectorAll('.num-btn').forEach(b => b.disabled = true);
+  document.querySelectorAll('.op-btn').forEach(b => b.disabled = true);
+}
+
+function startNextTimer() {
+  const timerEl = document.getElementById('next-timer');
+  function update() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    const diff = tomorrow - now;
+    const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+    timerEl.textContent = `${t('result.next')} ${h}:${m}:${s}`;
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+function showHint() {
+  if (!puzzle) return;
+  const partial = Math.floor(puzzle.target / 2);
+  showToast(`${t('hint.msg')}${partial} first`);
+}
+
+function shareResult() {
+  const stats = loadStats();
+  const won = stats.lastWon === todayStr;
+  const emoji = won ? '🟩' : '🟥';
+  const text = `QuRealm ${todayStr}\nTarget: ${puzzle.target} | Numbers: ${puzzle.numbers.join(', ')}\n${emoji} qurealm.com`;
+  if (navigator.share) {
+    navigator.share({ title: 'QuRealm', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast(t('copied')));
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+function copyEmail() {
+  navigator.clipboard.writeText('contact@qurealm.com').then(() => {
+    showToast(t('copied'));
+    document.getElementById('email-display').querySelector('span').textContent = '✓';
+    setTimeout(() => document.getElementById('email-display').querySelector('span').textContent = t('contact.copy'), 2000);
+  });
+}
+
+function scrollTo(selector) {
+  document.querySelector(selector)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+function confetti() {
+  const colors = ['#e8c547','#3dd68c','#7c5cbf','#5ab4f0','#f05a5a'];
+  const wrap = document.createElement('div');
+  wrap.className = 'confetti-wrap';
+  for (let i = 0; i < 50; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `left:${Math.random()*100}%;top:-10px;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*0.6}s;animation-duration:${0.8+Math.random()*0.8}s;transform:rotate(${Math.random()*360}deg)`;
+    wrap.appendChild(p);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 2500);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Init language display
+const _initMeta = LANG_META[lang] || LANG_META.en;
+document.getElementById('lang-flag').textContent = _initMeta.flag;
+document.getElementById('lang-label').textContent = _initMeta.label;
+document.querySelectorAll('.lang-option').forEach(opt => {
+  opt.classList.toggle('active', opt.getAttribute('onclick') === "setLang('" + lang + "')");
+});
+document.documentElement.lang = lang;
+renderGame();
+</script>
+</body>
+</html>
