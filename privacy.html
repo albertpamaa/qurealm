@@ -31,37 +31,130 @@
 <body>
 <header>
   <a href="/" class="logo">Qu<span>Realm</span></a>
-  <a href="/" class="back">← Back to game</a>
+  <a href="/" class="back" id="back-link">← Back to game</a>
 </header>
 <main>
-  <div class="page-title">Privacy Policy</div>
-  <div class="page-sub">Last updated: May 2026</div>
-
-  <div class="card">
-    <h2>🔒 Our commitment</h2>
-    <p>QuRealm is designed with privacy by default. We do not collect personal data, require registration, or track individual users across sessions.</p>
-  </div>
-  <div class="card">
-    <h2>💾 What we store</h2>
-    <p>Your game statistics (puzzles played, won, streak, last played date) are stored only in your browser's localStorage. This data never leaves your device and is not accessible to us. Clearing your browser data will reset your stats.</p>
-    <p>Your language and difficulty preferences are also stored locally.</p>
-  </div>
-  <div class="card">
-    <h2>🍪 Cookies</h2>
-    <p>QuRealm does not use tracking cookies or advertising cookies. We may use anonymous analytics in the future (page views only). If we do, this policy will be updated.</p>
-  </div>
-  <div class="card">
-    <h2>🔗 Third parties</h2>
-    <p>We use Google Fonts for typography. Google may log requests to its font servers according to Google's own privacy policy. No other third-party scripts are loaded.</p>
-  </div>
-  <div class="card">
-    <h2>✉️ Contact</h2>
-    <p>For privacy-related questions, contact us at <span style="color:var(--accent);font-family:'Space Mono',monospace">qrealmcontact@gmail.com</span></p>
-  </div>
+  <div class="page-title" id="t-title">Privacy Policy</div>
+  <div class="page-sub" id="t-sub">Last updated: May 2026</div>
+  <div class="card"><h2 id="t-h1">🔒 Our commitment</h2><p id="t-p1">QuRealm is designed with privacy by default. We do not collect personal data, require registration, or track individual users across sessions.</p></div>
+  <div class="card"><h2 id="t-h2">💾 What we store</h2><p id="t-p2">Your game statistics (puzzles played, won, streak, last played date) are stored only in your browser's localStorage. This data never leaves your device and is not accessible to us. Clearing your browser data will reset your stats.</p><p id="t-p3">Your language and difficulty preferences are also stored locally.</p></div>
+  <div class="card"><h2 id="t-h3">🍪 Cookies</h2><p id="t-p4">QuRealm does not use tracking cookies or advertising cookies. We may use anonymous analytics in the future (page views only). If we do, this policy will be updated.</p></div>
+  <div class="card"><h2 id="t-h4">🔗 Third parties</h2><p id="t-p5">We use Google Fonts for typography. Google may log requests to its font servers according to Google's own privacy policy. No other third-party scripts are loaded.</p></div>
+  <div class="card"><h2 id="t-h5">✉️ Contact</h2><p id="t-p6">For privacy-related questions, contact us at <span style="color:var(--accent);font-family:'Space Mono',monospace">qrealmcontact@gmail.com</span></p></div>
 </main>
 <footer>
   <p>© 2026 QuRealm</p>
-  <p style="margin-top:6px"><a href="/">Game</a><a href="/about.html">About</a><a href="/contact.html">Contact</a></p>
+  <p style="margin-top:6px"><a href="/" id="f-game">Game</a><a href="/about.html" id="f-about">About</a><a href="/contact.html" id="f-contact">Contact</a></p>
 </footer>
+<script>
+const T = {
+  en: {
+    back:'← Back to game', title:'Privacy Policy', sub:'Last updated: May 2026',
+    h1:'🔒 Our commitment', p1:"QuRealm is designed with privacy by default. We do not collect personal data, require registration, or track individual users across sessions.",
+    h2:'💾 What we store', p2:"Your game statistics (puzzles played, won, streak, last played date) are stored only in your browser's localStorage. This data never leaves your device and is not accessible to us. Clearing your browser data will reset your stats.", p3:'Your language and difficulty preferences are also stored locally.',
+    h3:'🍪 Cookies', p4:'QuRealm does not use tracking cookies or advertising cookies. We may use anonymous analytics in the future (page views only). If we do, this policy will be updated.',
+    h4:'🔗 Third parties', p5:"We use Google Fonts for typography. Google may log requests to its font servers according to Google's own privacy policy. No other third-party scripts are loaded.",
+    h5:'✉️ Contact', p6:'For privacy-related questions, contact us at',
+    fGame:'Game', fAbout:'About', fContact:'Contact',
+  },
+  es: {
+    back:'← Volver al juego', title:'Política de Privacidad', sub:'Última actualización: mayo de 2026',
+    h1:'🔒 Nuestro compromiso', p1:'QuRealm está diseñado con privacidad por defecto. No recopilamos datos personales, no requerimos registro ni rastreamos usuarios individuales entre sesiones.',
+    h2:'💾 Qué almacenamos', p2:'Tus estadísticas de juego (puzzles jugados, ganados, racha, última fecha) se guardan únicamente en el localStorage de tu navegador. Estos datos nunca salen de tu dispositivo. Borrar los datos del navegador reiniciará tus estadísticas.', p3:'Tus preferencias de idioma y dificultad también se guardan localmente.',
+    h3:'🍪 Cookies', p4:'QuRealm no usa cookies de rastreo ni publicitarias. En el futuro podríamos usar analíticas anónimas (solo páginas vistas). Si lo hacemos, esta política se actualizará.',
+    h4:'🔗 Terceros', p5:'Usamos Google Fonts para la tipografía. Google puede registrar solicitudes a sus servidores según su propia política de privacidad. No se cargan otros scripts de terceros.',
+    h5:'✉️ Contacto', p6:'Para preguntas relacionadas con la privacidad, contáctanos en',
+    fGame:'Juego', fAbout:'Sobre nosotros', fContact:'Contacto',
+  },
+  fr: {
+    back:'← Retour au jeu', title:'Politique de confidentialité', sub:'Dernière mise à jour : mai 2026',
+    h1:'🔒 Notre engagement', p1:"QuRealm est conçu avec la confidentialité par défaut. Nous ne collectons pas de données personnelles, n'exigeons pas d'inscription et ne suivons pas les utilisateurs individuels.",
+    h2:'💾 Ce que nous stockons', p2:"Vos statistiques de jeu sont stockées uniquement dans le localStorage de votre navigateur. Ces données ne quittent jamais votre appareil. Effacer les données du navigateur réinitialisera vos stats.", p3:'Vos préférences de langue et de difficulté sont également stockées localement.',
+    h3:'🍪 Cookies', p4:"QuRealm n'utilise pas de cookies de suivi ou publicitaires. Nous pourrions utiliser des analyses anonymes à l'avenir. Si c'est le cas, cette politique sera mise à jour.",
+    h4:'🔗 Tiers', p5:"Nous utilisons Google Fonts. Google peut enregistrer les requêtes selon sa propre politique de confidentialité. Aucun autre script tiers n'est chargé.",
+    h5:'✉️ Contact', p6:'Pour toute question relative à la confidentialité, contactez-nous à',
+    fGame:'Jeu', fAbout:'À propos', fContact:'Contact',
+  },
+  de: {
+    back:'← Zurück zum Spiel', title:'Datenschutzerklärung', sub:'Zuletzt aktualisiert: Mai 2026',
+    h1:'🔒 Unser Engagement', p1:'QuRealm ist datenschutzfreundlich gestaltet. Wir erheben keine persönlichen Daten, erfordern keine Registrierung und verfolgen keine einzelnen Nutzer.',
+    h2:'💾 Was wir speichern', p2:'Ihre Spielstatistiken werden nur im localStorage Ihres Browsers gespeichert. Diese Daten verlassen Ihr Gerät nie. Das Löschen der Browserdaten setzt Ihre Statistiken zurück.', p3:'Ihre Sprach- und Schwierigkeitspräferenzen werden ebenfalls lokal gespeichert.',
+    h3:'🍪 Cookies', p4:'QuRealm verwendet keine Tracking- oder Werbe-Cookies. Wir könnten in Zukunft anonyme Analysen verwenden. Wenn ja, wird diese Richtlinie aktualisiert.',
+    h4:'🔗 Drittanbieter', p5:'Wir verwenden Google Fonts. Google kann Anfragen gemäß seiner eigenen Datenschutzrichtlinie protokollieren. Keine anderen Drittanbieter-Skripte werden geladen.',
+    h5:'✉️ Kontakt', p6:'Für datenschutzbezogene Fragen kontaktieren Sie uns unter',
+    fGame:'Spiel', fAbout:'Über uns', fContact:'Kontakt',
+  },
+  it: {
+    back:'← Torna al gioco', title:'Informativa sulla Privacy', sub:'Ultimo aggiornamento: maggio 2026',
+    h1:'🔒 Il nostro impegno', p1:'QuRealm è progettato con la privacy come impostazione predefinita. Non raccogliamo dati personali, non richiediamo registrazione e non tracciamo gli utenti.',
+    h2:'💾 Cosa memorizziamo', p2:"Le tue statistiche di gioco sono memorizzate solo nel localStorage del tuo browser. Questi dati non lasciano mai il tuo dispositivo. Cancellare i dati del browser reimposterà le tue statistiche.", p3:'Le tue preferenze di lingua e difficoltà sono anche memorizzate localmente.',
+    h3:'🍪 Cookie', p4:'QuRealm non utilizza cookie di tracciamento o pubblicitari. Potremmo usare analisi anonime in futuro. In tal caso, questa politica sarà aggiornata.',
+    h4:'🔗 Terze parti', p5:"Utilizziamo Google Fonts. Google potrebbe registrare le richieste secondo la propria informativa. Nessun altro script di terze parti viene caricato.",
+    h5:'✉️ Contatti', p6:'Per domande sulla privacy, contattaci a',
+    fGame:'Gioco', fAbout:'Chi siamo', fContact:'Contatti',
+  },
+  pt: {
+    back:'← Voltar ao jogo', title:'Política de Privacidade', sub:'Última atualização: maio de 2026',
+    h1:'🔒 Nosso compromisso', p1:'QuRealm é projetado com privacidade por padrão. Não coletamos dados pessoais, não exigimos cadastro e não rastreamos usuários individuais.',
+    h2:'💾 O que armazenamos', p2:'Suas estatísticas de jogo são armazenadas apenas no localStorage do seu navegador. Esses dados nunca saem do seu dispositivo. Limpar os dados do navegador redefinirá suas estatísticas.', p3:'Suas preferências de idioma e dificuldade também são armazenadas localmente.',
+    h3:'🍪 Cookies', p4:'QuRealm não usa cookies de rastreamento ou publicidade. Podemos usar análises anônimas no futuro. Se o fizermos, esta política será atualizada.',
+    h4:'🔗 Terceiros', p5:'Usamos Google Fonts. O Google pode registrar solicitações de acordo com sua própria política de privacidade. Nenhum outro script de terceiros é carregado.',
+    h5:'✉️ Contato', p6:'Para questões de privacidade, entre em contato em',
+    fGame:'Jogo', fAbout:'Sobre', fContact:'Contato',
+  },
+  zh: {
+    back:'← 返回游戏', title:'隐私政策', sub:'最后更新：2026年5月',
+    h1:'🔒 我们的承诺', p1:'QuRealm 默认保护隐私。我们不收集个人数据，不要求注册，也不跨会话跟踪用户。',
+    h2:'💾 我们存储什么', p2:'您的游戏统计数据（已玩、已赢、连胜、最后游戏日期）仅存储在浏览器的localStorage中。这些数据永远不会离开您的设备。清除浏览器数据将重置您的统计。', p3:'您的语言和难度偏好也存储在本地。',
+    h3:'🍪 Cookie', p4:'QuRealm 不使用跟踪或广告Cookie。未来我们可能会使用匿名分析（仅页面浏览量）。如果使用，本政策将更新。',
+    h4:'🔗 第三方', p5:'我们使用Google Fonts。根据Google自己的隐私政策，Google可能会记录对其字体服务器的请求。不加载其他第三方脚本。',
+    h5:'✉️ 联系', p6:'如有隐私相关问题，请联系我们：',
+    fGame:'游戏', fAbout:'关于', fContact:'联系',
+  },
+  hi: {
+    back:'← खेल पर वापस जाएं', title:'गोपनीयता नीति', sub:'अंतिम अपडेट: मई 2026',
+    h1:'🔒 हमारी प्रतिबद्धता', p1:'QuRealm डिफ़ॉल्ट रूप से गोपनीयता के साथ डिज़ाइन किया गया है। हम व्यक्तिगत डेटा नहीं एकत्र करते, पंजीकरण की आवश्यकता नहीं है।',
+    h2:'💾 हम क्या संग्रहीत करते हैं', p2:'आपकी गेम सांख्यिकी केवल आपके ब्राउज़र के localStorage में संग्रहीत है। यह डेटा कभी आपके डिवाइस से नहीं निकलता। ब्राउज़र डेटा साफ़ करने से आपकी सांख्यिकी रीसेट हो जाएगी।', p3:'आपकी भाषा और कठिनाई प्राथमिकताएँ भी स्थानीय रूप से संग्रहीत हैं।',
+    h3:'🍪 कुकीज़', p4:'QuRealm ट्रैकिंग या विज्ञापन कुकीज़ का उपयोग नहीं करता। भविष्य में हम익명 विश्लेषण का उपयोग कर सकते हैं। यदि करते हैं, तो यह नीति अपडेट की जाएगी।',
+    h4:'🔗 तृतीय पक्ष', p5:'हम Google Fonts का उपयोग करते हैं। Google अपनी नीति के अनुसार अनुरोध लॉग कर सकता है। कोई अन्य तृतीय-पक्ष स्क्रिप्ट लोड नहीं होती।',
+    h5:'✉️ संपर्क', p6:'गोपनीयता संबंधी प्रश्नों के लिए हमसे संपर्क करें:',
+    fGame:'खेल', fAbout:'हमारे बारे में', fContact:'संपर्क',
+  },
+  ja: {
+    back:'← ゲームに戻る', title:'プライバシーポリシー', sub:'最終更新：2026年5月',
+    h1:'🔒 私たちのコミットメント', p1:'QuRealmはプライバシーをデフォルトとして設計されています。個人データの収集、登録の要求、ユーザーの追跡は行いません。',
+    h2:'💾 保存するデータ', p2:'ゲームの統計（プレイ数、勝利数、連続記録、最終プレイ日）はブラウザのlocalStorageにのみ保存されます。このデータはデバイスから外に出ることはありません。ブラウザデータを消去すると統計がリセットされます。', p3:'言語と難易度の設定もローカルに保存されます。',
+    h3:'🍪 クッキー', p4:'QuRealmはトラッキングや広告クッキーを使用しません。将来的に匿名分析を使用する可能性があります。その場合、このポリシーは更新されます。',
+    h4:'🔗 サードパーティ', p5:'Google Fontsを使用しています。GoogleはGoogle独自のプライバシーポリシーに従ってリクエストを記録する場合があります。他のサードパーティスクリプトは読み込まれません。',
+    h5:'✉️ お問い合わせ', p6:'プライバシーに関するご質問は以下までご連絡ください：',
+    fGame:'ゲーム', fAbout:'概要', fContact:'お問い合わせ',
+  },
+};
+
+function applyLang(l) {
+  const t = T[l] || T.en;
+  document.getElementById('back-link').textContent = t.back;
+  document.getElementById('t-title').textContent = t.title;
+  document.getElementById('t-sub').textContent = t.sub;
+  document.getElementById('t-h1').textContent = t.h1;
+  document.getElementById('t-p1').textContent = t.p1;
+  document.getElementById('t-h2').textContent = t.h2;
+  document.getElementById('t-p2').textContent = t.p2;
+  document.getElementById('t-p3').textContent = t.p3;
+  document.getElementById('t-h3').textContent = t.h3;
+  document.getElementById('t-p4').textContent = t.p4;
+  document.getElementById('t-h4').textContent = t.h4;
+  document.getElementById('t-p5').textContent = t.p5;
+  document.getElementById('t-h5').textContent = t.h5;
+  document.getElementById('t-p6').innerHTML = t.p6 + ' <span style="color:var(--accent);font-family:\'Space Mono\',monospace">qrealmcontact@gmail.com</span>';
+  document.getElementById('f-game').textContent = t.fGame;
+  document.getElementById('f-about').textContent = t.fAbout;
+  document.getElementById('f-contact').textContent = t.fContact;
+  document.documentElement.lang = l;
+}
+
+const lang = localStorage.getItem('qurealm_lang') || 'en';
+applyLang(lang);
+</script>
 </body>
 </html>
