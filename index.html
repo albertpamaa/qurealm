@@ -58,6 +58,12 @@
     .nav-link:hover{color:var(--text);}
     @media(max-width:600px){.nav-links{display:none;}}
 
+    /* DIFFICULTY */
+    .diff-row{display:flex;gap:8px;padding:12px 16px 0;}
+    .diff-btn{flex:1;padding:7px;border-radius:var(--radius);border:1.5px solid var(--border);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted);}
+    .diff-btn.active-easy{border-color:var(--green);color:var(--green);background:rgba(61,214,140,.08);}
+    .diff-btn.active-hard{border-color:var(--red);color:var(--red);background:rgba(240,90,90,.08);}
+
     /* MAIN */
     main{position:relative;z-index:1;max-width:580px;margin:0 auto;padding:2rem 1.5rem 6rem;}
 
@@ -235,9 +241,9 @@
       </div>
     </div>
     <nav class="nav-links">
-      <a href="#how-to-play" class="nav-link" onclick="document.getElementById('how-to-play').scrollIntoView({behavior:'smooth'});return false;" data-i18n="nav.how">How to play</a>
-      <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
-      <a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a>
+      <a href="#how" class="nav-link" data-i18n="nav.how">How to play</a>
+      <a href="/about.html" class="nav-link" data-i18n="nav.about">About</a>
+      <a href="/contact.html" class="nav-link" data-i18n="nav.contact">Contact</a>
     </nav>
   </div>
 </header>
@@ -272,6 +278,15 @@
       <div class="numbers-grid" id="numbers-grid"></div>
     </div>
 
+    <!-- ATTEMPTS BAR -->
+    <div class="attempts-bar">
+      <div class="attempts-label">
+        <span data-i18n="game.attempts">Attempts</span>
+        <span id="attempts-counter">0/10</span>
+      </div>
+      <div class="attempts-dots" id="attempts-dots"></div>
+    </div>
+
     <!-- CURRENT RUNNING VALUE -->
     <div class="current-val-display" id="current-val-display">
       <div class="cvd-label" data-i18n="game.running">Running total</div>
@@ -299,15 +314,6 @@
         <button class="btn-secondary" onclick="clearExpr()" data-i18n="game.clear">Clear</button>
         <button class="btn-secondary" onclick="showSolution()" data-i18n="game.solve">👁 Solution</button>
       </div>
-    </div>
-
-    <!-- ATTEMPTS BAR -->
-    <div class="attempts-bar">
-      <div class="attempts-label">
-        <span data-i18n="game.attempts">Attempts</span>
-        <span id="attempts-counter">0/10</span>
-      </div>
-      <div class="attempts-dots" id="attempts-dots"></div>
     </div>
 
     <!-- HISTORY -->
@@ -346,7 +352,7 @@
   </div>
 
   <!-- HOW TO PLAY -->
-  <div class="instructions" id="how-to-play">
+  <div class="instructions" id="how">
     <div class="inst-title">📖 <span data-i18n="how.title">How to play</span></div>
     <div class="steps">
       <div class="step">
@@ -372,46 +378,16 @@
     </div>
   </div>
 
-  <!-- ABOUT -->
-  <div class="section" id="about">
-    <h2>🌍 <span data-i18n="about.title">About QuRealm</span></h2>
-    <p data-i18n="about.p1">QuRealm is a free, independent daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same puzzle for every player in the world.</p>
-    <p data-i18n="about.p2">The concept is simple: given 4 numbers, reach a target using basic arithmetic. It sounds easy. It isn't always.</p>
-    <div class="highlight-box">
-      <p data-i18n="about.quote">"Math is the only universal language. QuRealm speaks it daily."</p>
-    </div>
-    <p data-i18n="about.p3">No accounts. No ads (yet). No data collected. Just you, the numbers, and the timer ticking toward tomorrow's puzzle.</p>
-    <p data-i18n="about.p4">QuRealm is built and maintained by a researcher who believes that daily mental exercise — like a puzzle before coffee — is worth something.</p>
-  </div>
-
-  <!-- PRIVACY -->
-  <div class="section" id="privacy">
-    <h2>🔒 <span data-i18n="privacy.title">Privacy Policy</span></h2>
-    <p data-i18n="privacy.p1">QuRealm is designed with privacy by default. We do not collect personal data, require registration, or track individual users.</p>
-    <h3 data-i18n="privacy.h2">What we store</h3>
-    <p data-i18n="privacy.p2">Your game statistics (puzzles played, won, streak) are stored only in your browser's localStorage. This data never leaves your device and is not accessible to us.</p>
-    <h3 data-i18n="privacy.h3">Cookies</h3>
-    <p data-i18n="privacy.p3">QuRealm does not use tracking cookies. In the future, we may use anonymous analytics (e.g. page views). If we do, this policy will be updated.</p>
-    <h3 data-i18n="privacy.h4">Third parties</h3>
-    <p data-i18n="privacy.p4">We use Google Fonts for typography. Google may log requests to its font servers. No other third-party scripts are loaded.</p>
-    <p data-i18n="privacy.p5">Last updated: May 2026.</p>
-  </div>
-
-  <!-- CONTACT -->
-  <div class="section" id="contact">
-    <h2>✉️ <span data-i18n="contact.title">Contact</span></h2>
-    <p data-i18n="contact.p1">Found a bug? Have a suggestion? Want to collaborate? We'd love to hear from you.</p>
-    <p data-i18n="contact.p2">We try to respond within 48 hours.</p>
-    <div class="email-display" onclick="copyEmail()" id="email-display">
-      📬 contact@qurealm.com <span style="font-size:11px;color:var(--muted);margin-left:8px;" data-i18n="contact.copy">copy</span>
-    </div>
-    <p style="margin-top:1rem" data-i18n="contact.p3">We welcome feedback on puzzle difficulty, new language requests, and accessibility improvements.</p>
-  </div>
 
 </main>
 
 <footer>
-  <p>© 2026 QuRealm · <a href="#about">About</a> · <a href="#privacy">Privacy</a> · <a href="#contact">Contact</a></p>
+  <p>© 2026 QuRealm</p>
+  <p style="margin-top:6px">
+    <a href="/about.html" data-i18n="nav.about" style="color:var(--hint);text-decoration:none;margin:0 8px">About</a>
+    <a href="/contact.html" data-i18n="nav.contact" style="color:var(--hint);text-decoration:none;margin:0 8px">Contact</a>
+    <a href="/privacy.html" data-i18n="nav.privacy" style="color:var(--hint);text-decoration:none;margin:0 8px">Privacy</a>
+  </p>
   <p style="margin-top:6px" data-i18n="footer.tagline">A new puzzle every day. Free forever.</p>
 </footer>
 
@@ -477,6 +453,8 @@ const T = {
     'contact.copy': 'copy',
     'contact.p3': 'We welcome feedback on puzzle difficulty, new language requests, and accessibility improvements.',
     'footer.tagline': 'A new puzzle every day. Free forever.',
+    'nav.privacy': 'Privacy',
+    'game.solve': '👁 Solution',
     'result.win': '🎉 Solved it!',
     'result.lose': '😅 Not today',
     'result.win.desc': 'Great job! You found a valid solution.',
@@ -538,6 +516,8 @@ const T = {
     'contact.copy': 'copiar',
     'contact.p3': 'Agradecemos comentarios sobre la dificultad de los puzzles, solicitudes de nuevos idiomas y mejoras de accesibilidad.',
     'footer.tagline': 'Un puzzle nuevo cada día. Gratis para siempre.',
+    'nav.privacy': 'Privacidad',
+    'game.solve': '👁 Solución',
     'result.win': '🎉 ¡Resuelto!',
     'result.lose': '😅 Mañana será',
     'result.win.desc': '¡Bien hecho! Has encontrado una solución válida.',
@@ -752,6 +732,7 @@ const T = {
 };
 
 let lang = localStorage.getItem('qurealm_lang') || 'en';
+let difficulty = localStorage.getItem('qurealm_diff') || 'easy';
 
 function t(key) { return T[lang][key] || T['en'][key] || key; }
 
@@ -766,6 +747,14 @@ const LANG_META = {
   hi: {flag:'🇮🇳', label:'HI'},
   ja: {flag:'🇯🇵', label:'JA'},
 };
+
+function setDifficulty(d) {
+  difficulty = d;
+  localStorage.setItem('qurealm_diff', d);
+  document.getElementById('diff-easy').className = 'diff-btn' + (d === 'easy' ? ' active-easy' : '');
+  document.getElementById('diff-hard').className = 'diff-btn' + (d === 'hard' ? ' active-hard' : '');
+  if (!gameOver) renderGame();
+}
 
 function toggleLangDropdown() {
   const trigger = document.getElementById('lang-trigger');
@@ -834,7 +823,7 @@ function dateToSeed(date) {
 
 function generatePuzzle(dateStr) {
   const seed = dateToSeed(dateStr);
-  const rng = seededRandom(seed + (difficulty === 'hard' ? 9999 : 0));
+  const rng = seededRandom(seed + (difficulty === 'hard' ? 999 : 0));
 
   // Generate numbers 1-9
   const nums = [];
@@ -965,7 +954,6 @@ let puzzle = null;
 let usedIndices = [];
 let expression = [];
 let gameOver = false;
-let difficulty = localStorage.getItem('qurealm_diff') || 'easy';
 let todayStr = '';
 const MAX_ATTEMPTS = 10;
 let attemptNum = 0;
@@ -977,12 +965,11 @@ function getTodayStr() {
 }
 
 function loadStats() {
-  const key = 'qurealm_stats_' + difficulty;
-  return JSON.parse(localStorage.getItem(key) || '{"played":0,"won":0,"streak":0,"lastWon":"","lastPlayed":""}');
+  return JSON.parse(localStorage.getItem('qurealm_stats') || '{"played":0,"won":0,"streak":0,"lastWon":"","lastPlayed":""}');
 }
 
 function saveStats(s) {
-  localStorage.setItem('qurealm_stats_' + difficulty, JSON.stringify(s));
+  localStorage.setItem('qurealm_stats', JSON.stringify(s));
 }
 
 function renderGame() {
@@ -1108,15 +1095,15 @@ function selectNum(idx) {
 
     updateExprDisplay();
 
-    // AUTO WIN
+    // Auto-check: win if matches target
     if (Math.abs(currentVal - puzzle.target) < 0.001) {
-      setTimeout(doCheckSolution, 200);
+      setTimeout(() => autoWin(), 200);
       return;
     }
-    // AUTO FAIL: no unused numbers left
-    const remainingNums = puzzle.numbers.length - usedIndices.length;
-    if (remainingNums === 0) {
-      setTimeout(doCheckSolution, 300);
+    // Auto-fail: no unused numbers left and result doesn't match
+    const unusedCount = puzzle.numbers.length - usedIndices.length;
+    if (unusedCount === 0) {
+      setTimeout(() => autoFail(), 300);
     }
 
     // Show running total
@@ -1187,56 +1174,48 @@ function clearExpr() {
   document.getElementById('current-val-display').classList.remove('show');
 }
 
-function setDifficulty(d) {
-  difficulty = d;
-  localStorage.setItem('qurealm_diff', d);
-  document.getElementById('diff-easy').className = 'diff-btn' + (d === 'easy' ? ' active-easy' : '');
-  document.getElementById('diff-hard').className = 'diff-btn' + (d === 'hard' ? ' active-hard' : '');
-  gameOver = false;
-  document.getElementById('result-panel').classList.remove('show');
-  renderGame();
-}
-
-function showSolution() {
-  if (gameOver) { showToast('💡 ' + puzzle.solution); return; }
-  // Count as failed attempt + show result
-  const exprText = steps[0] || '—';
-  const val = currentVal !== null ? Math.round(currentVal * 100) / 100 : '—';
-  attemptHistory.push({ correct: false, expr: '👁 revealed', val });
-  attemptNum++;
-  renderAttemptsDots();
-  addHistoryItem(attemptNum, '👁 ' + t('game.solve'), val, false);
-  gameOver = true;
+function autoWin() {
   const stats = loadStats();
   stats.played++;
   stats.lastPlayed = todayStr;
+  stats.won++;
+  if (stats.lastWon === getPreviousDayStr()) stats.streak++;
+  else if (stats.lastWon !== todayStr) stats.streak = 1;
+  stats.lastWon = todayStr;
   saveStats(stats);
-  updateStatDisplay(stats);
-  // Show special panel
-  const panel = document.getElementById('result-panel');
-  panel.classList.add('show');
-  document.getElementById('result-emoji').textContent = '🔍';
-  const title = document.getElementById('result-title');
-  title.className = 'result-title lose';
-  title.textContent = "Don't give up so soon! 💪";
-  document.getElementById('result-desc').textContent = "Another day will come. Here's the solution:";
-  const solEl = document.getElementById('result-solution');
-  solEl.style.display = 'block';
-  solEl.textContent = puzzle.solution;
-  startNextTimer();
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
+  document.getElementById('stat-played').textContent = stats.played;
+  document.getElementById('stat-won').textContent = stats.won;
+  document.getElementById('stat-streak').textContent = stats.streak;
+  gameOver = true;
+  showResult(true, 1);
+  confetti();
 }
 
-function doCheckSolution() {
-  if (currentVal === null || gameOver) return;
+function autoFail() {
+  showToast('✗ ' + currentVal + ' ≠ ' + puzzle.target + ' — try again!');
+  clearExpr();
+}
+
+function showSolution() {
+  showToast('💡 ' + puzzle.solution);
+}
+
+function checkSolution() {
+  if (!currentVal || gameOver) return;
   const correct = Math.abs(currentVal - puzzle.target) < 0.001;
   const exprText = steps[0] || '';
   const rounded = Math.round(currentVal * 100) / 100;
+
+  // Add to history
   attemptHistory.push({ correct, expr: exprText, val: rounded });
   attemptNum++;
   renderAttemptsDots();
+
+  // Show in history list
   addHistoryItem(attemptNum, exprText, rounded, correct);
+
   if (correct) {
+    // WON
     const stats = loadStats();
     stats.played++;
     stats.lastPlayed = todayStr;
@@ -1250,6 +1229,7 @@ function doCheckSolution() {
     showResult(true, attemptNum);
     confetti();
   } else if (attemptNum >= MAX_ATTEMPTS) {
+    // OUT OF ATTEMPTS
     const stats = loadStats();
     stats.played++;
     stats.lastPlayed = todayStr;
@@ -1258,14 +1238,10 @@ function doCheckSolution() {
     gameOver = true;
     showResult(false, attemptNum);
   } else {
+    // FAILED ATTEMPT — reset for next try
     showToast('❌ ' + rounded + ' ≠ ' + puzzle.target + ' — attempt ' + attemptNum + '/' + MAX_ATTEMPTS);
     clearExpr();
   }
-}
-
-function checkSolution() {
-  if (currentVal === null || gameOver) return;
-  doCheckSolution();
 }
 
 function addHistoryItem(num, expr, val, correct) {
