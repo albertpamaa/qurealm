@@ -849,6 +849,15 @@ function findSolution(nums, target) {
 // GAME STATE
 // ============================================================
 let puzzle = null;
+let gameOver = false;
+let todayStr = "";
+let attemptCount = 0;
+let attemptHistory = [];
+let originalNums = [];
+let availableSlots = [];
+let selectedSlotIdx = null;
+let selectedOp = null;
+let currentExprParts = [];
 
 function renderGame() {
   todayStr = getTodayStr();
