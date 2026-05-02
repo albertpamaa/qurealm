@@ -209,7 +209,7 @@
       </div>
     </div>
     <nav class="nav-links">
-      <a href="/how-to-play.html" class="nav-link" data-i18n="nav.how">How to play</a>
+      <a href="#how" class="nav-link" data-i18n="nav.how">How to play</a>
       <a href="/about.html" class="nav-link" data-i18n="nav.about">About</a>
       <a href="/contact.html" class="nav-link" data-i18n="nav.contact">Contact</a>
     </nav>
@@ -302,7 +302,7 @@
   </div>
 
   <!-- HOW TO PLAY -->
-  <div class="how-card">
+  <div class="how-card" id="how">
     <div class="how-title">📖 <span data-i18n="how.title">How to play</span></div>
     <div class="steps">
       <div class="step"><div class="step-n">1</div><div class="step-t" data-i18n="how.step1">Look at the target number and the 4 numbers given.</div></div>
@@ -849,55 +849,6 @@ function findSolution(nums, target) {
 // GAME STATE
 // ============================================================
 let puzzle = null;
-let difficulty = localStorage.getItem('qurealm_diff') || 'easy';
-let usedIndices = [];
-let expression = [];
-let gameOver = false;
-let todayStr = '';
-const MAX_ATTEMPTS = 10;
-
-
-function generatePuzzle(dateStr) {
-  const seed = dateToSeed(dateStr);
-  const rng = seededRandom(seed + (difficulty === "hard" ? 999 : 0));
-  const nums = [];
-  for (let i = 0; i < 4; i++) nums.push(Math.floor(rng() * 9) + 1);
-  const results = getAllResults(nums);
-  const validTargets = difficulty === "hard"
-    ? [...results].filter(r => r >= 50 && r <= 200 && Number.isInteger(r))
-    : [...results].filter(r => r >= 10 && r <= 50 && Number.isInteger(r));
-  if (validTargets.length === 0) return { numbers:[3,4,6,2], target:24, solution:"6 × 4 = 24" };
-  const idx = Math.floor(rng() * validTargets.length);
-  const target = validTargets[idx];
-  const solution = findSolution(nums, target);
-  return { numbers:nums, target, solution };
-}
-
-// ============================================================
-// GAME STATE
-// ============================================================
-let puzzle = null;
-let gameOver = false;
-let todayStr = "";
-let attemptCount = 0;
-let attemptHistory = [];
-
-// Current expression state
-let originalNums = [];      // original 4 numbers
-let availableSlots = [];    // {value, used, isResult}
-let selectedSlotIdx = null;
-let selectedOp = null;
-let currentExprParts = [];  // text parts for display
-
-function getTodayStr() {
-  const d = new Date();
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-}
-
-function loadStats() {
-  return JSON.parse(localStorage.getItem("qurealm_stats") || '{"played":0,"won":0,"streak":0,"lastWon":"","lastPlayed":""}');
-}
-function saveStats(s) { localStorage.setItem("qurealm_stats", JSON.stringify(s)); }
 
 function renderGame() {
   todayStr = getTodayStr();
