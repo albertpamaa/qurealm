@@ -1297,6 +1297,7 @@ function autoWin() {
 }
 
 function autoFail() {
+  console.log("autoFail called, attemptNum=", attemptNum, "MAX=", MAX_ATTEMPTS);
   const exprText = steps[0] || '—';
   const val = currentVal !== null ? Math.round(currentVal * 100) / 100 : '—';
   attemptHistory.push({ correct: false, expr: exprText, val });
@@ -1311,8 +1312,8 @@ function autoFail() {
     updateStatDisplay(stats);
     gameOver = true;
     saveDiffState();
-    doReset();
     showResult(false, attemptNum);
+    window.scrollTo({top: 0, behavior: 'smooth'});
     return;
   }
   saveDiffState();
@@ -1341,7 +1342,7 @@ function showSolution() {
   solEl.style.display = 'block';
   solEl.textContent = puzzle.solution;
   startNextTimer();
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
+  setTimeout(() => { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
 }
 
 function checkSolution() {
@@ -1415,6 +1416,7 @@ function getPreviousDayStr() {
 }
 
 function showResult(win, attempts) {
+  console.log("showResult called, win=", win, "attempts=", attempts);
   const panel = document.getElementById('result-panel');
   panel.classList.add('show');
   panel.style.display = 'block';
@@ -1436,7 +1438,7 @@ function showResult(win, attempts) {
     solEl.textContent = puzzle.solution;
   }
   startNextTimer();
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
+  setTimeout(() => { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
 }
 
 function showAlreadyPlayed(won) {
