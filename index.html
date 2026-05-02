@@ -1083,7 +1083,8 @@ function renderGame() {
     selectedOp = savedState.selectedOp;
     currentVal = savedState.currentVal;
     currentNums = savedState.currentNums || [];
-    gameOver = savedState.gameOver || false;
+    // Only restore gameOver if this difficulty was actually played today
+    gameOver = (savedState.gameOver && stats.lastPlayed === today) ? true : false;
     document.getElementById('history-list').innerHTML = savedState.historyHTML || '';
     document.getElementById('history-section').style.display = savedState.historyVisible || 'none';
     renderAttemptsDots();
@@ -1097,12 +1098,18 @@ function renderGame() {
       if (btn) btn.classList.add('selected');
     }
     updateExprDisplay();
-    // Restore result panel if game was over
-    if (savedState.resultVisible) {
-      // Already played - just show alreadyPlayed panel
-      if (stats.lastPlayed === today) {
-        showAlreadyPlayed(stats.lastWon === today);
-      }
+    // Show result panel only if this difficulty was finished today
+    if (gameOver && stats.lastPlayed === today) {
+      showAlreadyPlayed(stats.lastWon === today);
+    } else if (gameOver) {
+      // State was saved as gameOver but it was a different day - reset
+      gameOver = false;
+      attemptNum = 0;
+      attemptHistory = [];
+      renderAttemptsDots();
+      document.getElementById('history-section').style.display = 'none';
+      document.getElementById('history-list').innerHTML = '';
+      doReset();
     }
   } else {
     // Fresh start for this difficulty
