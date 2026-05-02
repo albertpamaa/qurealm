@@ -1143,7 +1143,7 @@ function renderAttemptsDots() {
     }
     container.appendChild(dot);
   }
-  counter.textContent = (gameOver ? attemptNum : attemptNum + 1) + '/' + MAX_ATTEMPTS;
+  counter.textContent = attemptNum + '/' + MAX_ATTEMPTS;
 }
 
 // ============================================================
@@ -1417,6 +1417,7 @@ function getPreviousDayStr() {
 function showResult(win, attempts) {
   const panel = document.getElementById('result-panel');
   panel.classList.add('show');
+  panel.style.display = 'block';
   document.getElementById('result-emoji').textContent = win ? '🎉' : '😅';
   const title = document.getElementById('result-title');
   title.className = 'result-title ' + (win ? 'win' : 'lose');
