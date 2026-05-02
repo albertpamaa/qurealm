@@ -310,15 +310,17 @@
       <div class="history-list" id="history-list"></div>
     </div>
 
-    <div class="result-panel" id="result-panel">
-      <div class="result-emoji" id="result-emoji"></div>
-      <div class="result-title" id="result-title"></div>
-      <div class="result-desc" id="result-desc"></div>
-      <div class="result-solution" id="result-solution" style="display:none"></div>
-      <button class="share-btn" onclick="shareResult()">📤 <span data-i18n="game.share">Share result</span></button>
-      <div class="next-timer" id="next-timer"></div>
-    </div>
   </div>
+
+  <!-- RESULT PANEL -->
+  <div class="result-panel" id="result-panel" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:1rem;text-align:center;">
+    <div class="result-emoji" id="result-emoji"></div>
+    <div class="result-title" id="result-title"></div>
+    <div class="result-desc" id="result-desc"></div>
+    <div class="result-solution" id="result-solution" style="display:none"></div>
+    <button class="share-btn" onclick="shareResult()">📤 <span data-i18n="game.share">Share</span></button>
+    <div class="next-timer" id="next-timer"></div>
+  </div>v>
 
   <!-- STATS -->
   <div class="stats-card">
@@ -1271,7 +1273,7 @@ function doReset() {
   const el = document.getElementById('expr-text');
   el.textContent = t('game.tapnumber');
   el.classList.add('empty');
-  document.getElementById('btn-check').disabled = true;
+  document.getElementById('btn-check') && (document.getElementById('btn-check').disabled = true);
 }
 
 function autoWin() {
@@ -1297,7 +1299,6 @@ function autoWin() {
 }
 
 function autoFail() {
-  console.log("autoFail called, attemptNum=", attemptNum, "MAX=", MAX_ATTEMPTS);
   const exprText = steps[0] || '—';
   const val = currentVal !== null ? Math.round(currentVal * 100) / 100 : '—';
   attemptHistory.push({ correct: false, expr: exprText, val });
@@ -1416,7 +1417,6 @@ function getPreviousDayStr() {
 }
 
 function showResult(win, attempts) {
-  console.log("showResult called, win=", win, "attempts=", attempts);
   const panel = document.getElementById('result-panel');
   panel.classList.add('show');
   panel.style.display = 'block';
