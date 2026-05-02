@@ -108,6 +108,9 @@
     .expr-display{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-family:'Space Mono',monospace;font-size:18px;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
     .expr-text{flex:1;color:var(--text);word-break:break-all;}
     .expr-text.empty{color:var(--hint);}
+    .expr-result{font-size:14px;font-weight:700;padding:4px 12px;border-radius:20px;flex-shrink:0;}
+    .expr-result.correct{background:rgba(61,214,140,.15);color:var(--green);}
+    .expr-result.wrong{background:rgba(240,90,90,.15);color:var(--red);}
 
     /* ACTIONS */
     .actions-section{padding:0 1.5rem 1.5rem;display:flex;flex-direction:column;gap:10px;}
@@ -197,6 +200,10 @@
     .history-result.far{color:var(--red);}
 
     /* CURRENT VAL DISPLAY */
+    .current-val-display{background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.2);border-radius:var(--radius);padding:8px 14px;margin:0 1.5rem 1rem;text-align:center;display:none;}
+    .current-val-display.show{display:block;}
+    .cvd-label{font-size:11px;color:var(--muted);margin-bottom:2px;}
+    .cvd-val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);}
 
     /* MOBILE NAV */
     /* MOBILE NAV */
@@ -283,6 +290,7 @@
     <div class="expr-section">
       <div class="expr-display">
         <span class="expr-text empty" id="expr-text" data-i18n-placeholder="game.tapnumber">Tap a number to start...</span>
+        <span class="expr-result" id="expr-result" style="display:none"></span>
       </div>
     </div>
 
@@ -303,6 +311,10 @@
     </div>
 
     <!-- CURRENT RUNNING VALUE -->
+    <div class="current-val-display" id="current-val-display">
+      <div class="cvd-label" data-i18n="game.running">Running total</div>
+      <div class="cvd-val" id="current-val-text">—</div>
+    </div>
 
     <!-- HISTORY -->
     <div class="history-section" id="history-section" style="display:none">
@@ -1031,6 +1043,7 @@ function renderGame() {
   renderAttemptsDots();
   document.getElementById('history-section').style.display = 'none';
   document.getElementById('history-list').innerHTML = '';
+  document.getElementById('current-val-display').classList.remove('show');
 
   // Check if already played today
   if (stats.lastPlayed === todayStr) {
@@ -1129,7 +1142,23 @@ function selectNum(idx) {
       setTimeout(() => autoFail(), 300);
     }
 
+    // Show running total
+    const cvd = document.getElementById('current-val-display');
+    const cvdVal = document.getElementById('current-val-text');
+    const rounded = Math.round(currentVal * 100) / 100;
+    cvdVal.textContent = rounded;
+    cvd.classList.add('show');
 
+    // Highlight if matches target
+    if (Math.abs(currentVal - puzzle.target) < 0.001) {
+      cvd.style.background = 'rgba(61,214,140,.12)';
+      cvd.style.borderColor = 'rgba(61,214,140,.4)';
+      cvdVal.style.color = 'var(--green)';
+    } else {
+      cvd.style.background = '';
+      cvd.style.borderColor = '';
+      cvdVal.style.color = '';
+    }
   }
 }
 
@@ -1143,16 +1172,25 @@ function selectOp(op) {
 
 function updateExprDisplay() {
   const el = document.getElementById('expr-text');
+  const res = document.getElementById('expr-result');
   if (steps.length === 0) {
     el.textContent = t('game.tapnumber');
     el.classList.add('empty');
+    res.style.display = 'none';
     return;
   }
   el.classList.remove('empty');
   const expr = selectedOp ? `${steps[0]} ${selectedOp}` : steps[0];
   el.textContent = expr;
 
-
+  if (currentVal !== null && selectedOp === null) {
+    res.style.display = 'inline';
+    const rounded = Math.round(currentVal * 100) / 100;
+    res.textContent = `= ${rounded}`;
+    res.className = 'expr-result ' + (Math.abs(currentVal - puzzle.target) < 0.001 ? 'correct' : 'wrong');
+  } else {
+    res.style.display = 'none';
+  }
 }
 
 function clearExpr() {
@@ -1192,7 +1230,10 @@ function doReset() {
   const el = document.getElementById('expr-text');
   el.textContent = t('game.tapnumber');
   el.classList.add('empty');
+  document.getElementById('expr-result').style.display = 'none';
   document.getElementById('btn-check').disabled = true;
+  document.getElementById('current-val-display').classList.remove('show');
+  document.getElementById('current-val-text').textContent = '—';
 }
 
 function autoWin() {
