@@ -42,46 +42,235 @@
 <body>
 <header>
   <a href="/" class="logo">Qu<span>Realm</span></a>
-  <a href="/" class="back">← Back to game</a>
+  <a href="/" class="back" id="back-link">← Back to game</a>
 </header>
 <main>
-  <div class="page-title">About QuRealm</div>
-  <div class="page-sub">A free daily math puzzle for everyone, everywhere.</div>
+  <div class="page-title" id="t-title">About QuRealm</div>
+  <div class="page-sub" id="t-sub">A free daily math puzzle for everyone, everywhere.</div>
 
   <div class="card">
-    <h2>Who's behind this?</h2>
+    <h2 id="t-who-h">Who's behind this?</h2>
     <div class="profile">
       <div class="avatar">🔬</div>
       <div>
         <div class="profile-name">Albert Parra</div>
-        <div class="profile-role">PhD in Optical Engineering · Biomedical Researcher</div>
+        <div class="profile-role" id="t-role">PhD in Optical Engineering · Biomedical Researcher</div>
       </div>
     </div>
-    <p>I am a scientist, PhD in optical engineering, working in biomedical research.</p>
-    <p>I've always believed that daily mental exercise has real value. QuRealm is my attempt to make that fun.</p>
-    <div class="quote">"Math is the only truly universal language. QuRealm speaks it every day."</div>
+    <p id="t-who-p1">I am a scientist, PhD in optical engineering, working in biomedical research.</p>
+    <p id="t-who-p2">I've always believed that daily mental exercise has real value. QuRealm is my attempt to make that fun.</p>
+    <div class="quote" id="t-quote">"Math is the only truly universal language. QuRealm speaks it every day."</div>
   </div>
 
   <div class="card">
-    <h2>What is QuRealm?</h2>
-    <p>QuRealm is a free daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same one for every player in the world, regardless of language or location.</p>
-    <p>The concept: given 4 numbers, reach a target using +, −, ×, ÷. You can chain operations. It sounds simple. It isn't always.</p>
-    <p>QuRealm supports Easy and Hard modes. Easy keeps targets between 10-50. Hard pushes to 50-200, requiring more creative chains.</p>
+    <h2 id="t-what-h">What is QuRealm?</h2>
+    <p id="t-what-p1">QuRealm is a free daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same one for every player in the world, regardless of language or location.</p>
+    <p id="t-what-p2">The concept: given 4 numbers, reach a target using +, −, ×, ÷. You can chain operations. It sounds simple. It isn't always.</p>
+    <p id="t-what-p3">QuRealm supports Easy and Hard modes. Easy keeps targets between 10-50. Hard pushes to 50-200, requiring more creative chains.</p>
   </div>
 
   <div class="card">
-    <h2>Our principles</h2>
+    <h2 id="t-princ-h">Our principles</h2>
     <div class="values">
-      <div class="value"><div class="value-icon">🆓</div><div class="value-title">Always free</div><div class="value-desc">No subscriptions, no paywalls. Ever.</div></div>
-      <div class="value"><div class="value-icon">🔒</div><div class="value-title">No data collected</div><div class="value-desc">Stats stay in your browser. Nothing sent to us.</div></div>
-      <div class="value"><div class="value-icon">🌍</div><div class="value-title">Truly global</div><div class="value-desc">9 languages. Same puzzle for everyone.</div></div>
-      <div class="value"><div class="value-icon">📅</div><div class="value-title">Daily refresh</div><div class="value-desc">New puzzle every day at midnight UTC.</div></div>
+      <div class="value"><div class="value-icon">🆓</div><div class="value-title" id="t-v1t">Always free</div><div class="value-desc" id="t-v1d">No subscriptions, no paywalls. Ever.</div></div>
+      <div class="value"><div class="value-icon">🔒</div><div class="value-title" id="t-v2t">No data collected</div><div class="value-desc" id="t-v2d">Stats stay in your browser. Nothing sent to us.</div></div>
+      <div class="value"><div class="value-icon">🌍</div><div class="value-title" id="t-v3t">Truly global</div><div class="value-desc" id="t-v3d">9 languages. Same puzzle for everyone.</div></div>
+      <div class="value"><div class="value-icon">📅</div><div class="value-title" id="t-v4t">Daily refresh</div><div class="value-desc" id="t-v4d">New puzzle every day at midnight UTC.</div></div>
     </div>
   </div>
 </main>
 <footer>
   <p>© 2026 QuRealm</p>
-  <p style="margin-top:6px"><a href="/">Game</a><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a></p>
+  <p style="margin-top:6px"><a href="/" id="f-game">Game</a><a href="/contact.html" id="f-contact">Contact</a><a href="/privacy.html" id="f-privacy">Privacy</a></p>
 </footer>
+<script>
+const T = {
+  en: {
+    back: '← Back to game', title: 'About QuRealm', sub: 'A free daily math puzzle for everyone, everywhere.',
+    whoH: "Who's behind this?", role: 'PhD in Optical Engineering · Biomedical Researcher',
+    whoP1: 'I am a scientist, PhD in optical engineering, working in biomedical research.',
+    whoP2: "I've always believed that daily mental exercise has real value. QuRealm is my attempt to make that fun.",
+    quote: '"Math is the only truly universal language. QuRealm speaks it every day."',
+    whatH: 'What is QuRealm?',
+    whatP1: 'QuRealm is a free daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same one for every player in the world, regardless of language or location.',
+    whatP2: 'The concept: given 4 numbers, reach a target using +, −, ×, ÷. You can chain operations. It sounds simple. It isn\'t always.',
+    whatP3: 'QuRealm supports Easy and Hard modes. Easy keeps targets between 10-50. Hard pushes to 50-200, requiring more creative chains.',
+    princH: 'Our principles',
+    v1t: 'Always free', v1d: 'No subscriptions, no paywalls. Ever.',
+    v2t: 'No data collected', v2d: 'Stats stay in your browser. Nothing sent to us.',
+    v3t: 'Truly global', v3d: '9 languages. Same puzzle for everyone.',
+    v4t: 'Daily refresh', v4d: 'New puzzle every day at midnight UTC.',
+    fGame: 'Game', fContact: 'Contact', fPrivacy: 'Privacy',
+  },
+  es: {
+    back: '← Volver al juego', title: 'Sobre QuRealm', sub: 'Un puzzle matemático diario gratuito para todos.',
+    whoH: '¿Quién hay detrás?', role: 'Doctor en Ingeniería Óptica · Investigador en Biomedicina',
+    whoP1: 'Soy científico, doctor en ingeniería óptica e investigador en biomedicina.',
+    whoP2: 'Siempre he creído que el ejercicio mental diario tiene valor real. QuRealm es mi intento de hacerlo divertido.',
+    quote: '"Las matemáticas son el único idioma verdaderamente universal. QuRealm lo habla cada día."',
+    whatH: '¿Qué es QuRealm?',
+    whatP1: 'QuRealm es un puzzle matemático diario gratuito. Cada día a medianoche UTC se genera un nuevo puzzle, el mismo para todos los jugadores del mundo.',
+    whatP2: 'El concepto: dados 4 números, llega al objetivo usando +, −, ×, ÷. Puedes encadenar operaciones. Parece simple. No siempre lo es.',
+    whatP3: 'QuRealm tiene modo Fácil y Difícil. Fácil mantiene objetivos entre 10-50. Difícil llega a 50-200, requiriendo cadenas más creativas.',
+    princH: 'Nuestros principios',
+    v1t: 'Siempre gratis', v1d: 'Sin suscripciones ni muros de pago. Nunca.',
+    v2t: 'Sin datos', v2d: 'Las estadísticas quedan en tu navegador. Nada se envía.',
+    v3t: 'Verdaderamente global', v3d: '9 idiomas. El mismo puzzle para todos.',
+    v4t: 'Actualización diaria', v4d: 'Nuevo puzzle cada día a medianoche UTC.',
+    fGame: 'Juego', fContact: 'Contacto', fPrivacy: 'Privacidad',
+  },
+  fr: {
+    back: '← Retour au jeu', title: 'À propos de QuRealm', sub: 'Un puzzle mathématique quotidien gratuit pour tous.',
+    whoH: 'Qui est derrière ?', role: 'Docteur en Ingénierie Optique · Chercheur en Biomédecine',
+    whoP1: 'Je suis scientifique, docteur en ingénierie optique, chercheur en biomédecine.',
+    whoP2: "J'ai toujours cru que l'exercice mental quotidien a une vraie valeur. QuRealm est ma façon de le rendre amusant.",
+    quote: '"Les maths sont le seul langage vraiment universel. QuRealm le parle chaque jour."',
+    whatH: "Qu'est-ce que QuRealm ?",
+    whatP1: 'QuRealm est un puzzle mathématique quotidien gratuit. Chaque jour à minuit UTC, un nouveau puzzle est généré — le même pour tous les joueurs du monde.',
+    whatP2: 'Le concept : avec 4 chiffres, atteignez une cible avec +, −, ×, ÷. Vous pouvez enchaîner les opérations.',
+    whatP3: 'QuRealm propose les modes Facile et Difficile. Facile : cibles entre 10-50. Difficile : jusqu\'à 50-200.',
+    princH: 'Nos principes',
+    v1t: 'Toujours gratuit', v1d: 'Pas d\'abonnement. Jamais.',
+    v2t: 'Aucune donnée', v2d: 'Les stats restent dans votre navigateur.',
+    v3t: 'Vraiment mondial', v3d: '9 langues. Le même puzzle pour tous.',
+    v4t: 'Nouveau chaque jour', v4d: 'Nouveau puzzle chaque jour à minuit UTC.',
+    fGame: 'Jeu', fContact: 'Contact', fPrivacy: 'Confidentialité',
+  },
+  de: {
+    back: '← Zurück zum Spiel', title: 'Über QuRealm', sub: 'Ein kostenloses tägliches Mathe-Rätsel für alle.',
+    whoH: 'Wer steckt dahinter?', role: 'Dr. in optischer Ingenieurwissenschaft · Biomedizinischer Forscher',
+    whoP1: 'Ich bin Wissenschaftler, promoviert in optischer Ingenieurwissenschaft, tätig in der biomedizinischen Forschung.',
+    whoP2: 'Ich glaube, dass tägliche geistige Übung echten Wert hat. QuRealm ist mein Versuch, das spaßig zu machen.',
+    quote: '"Mathematik ist die einzige wirklich universelle Sprache. QuRealm spricht sie täglich."',
+    whatH: 'Was ist QuRealm?',
+    whatP1: 'QuRealm ist ein kostenloses tägliches Mathe-Rätsel. Jeden Tag um Mitternacht UTC wird ein neues Rätsel generiert — dasselbe für alle Spieler weltweit.',
+    whatP2: 'Das Konzept: Mit 4 Zahlen eine Zielzahl erreichen mit +, −, ×, ÷. Operationen können verkettet werden.',
+    whatP3: 'QuRealm hat Leicht- und Schwer-Modus. Leicht: Ziele zwischen 10-50. Schwer: bis zu 50-200.',
+    princH: 'Unsere Grundsätze',
+    v1t: 'Immer kostenlos', v1d: 'Keine Abonnements. Nie.',
+    v2t: 'Keine Daten', v2d: 'Statistiken bleiben in Ihrem Browser.',
+    v3t: 'Wirklich global', v3d: '9 Sprachen. Dasselbe Rätsel für alle.',
+    v4t: 'Tägliche Erneuerung', v4d: 'Jeden Tag um Mitternacht UTC neues Rätsel.',
+    fGame: 'Spiel', fContact: 'Kontakt', fPrivacy: 'Datenschutz',
+  },
+  it: {
+    back: '← Torna al gioco', title: 'Chi siamo', sub: 'Un puzzle matematico quotidiano gratuito per tutti.',
+    whoH: 'Chi c\'è dietro?', role: 'Dottore in Ingegneria Ottica · Ricercatore in Biomedicina',
+    whoP1: 'Sono uno scienziato, dottore in ingegneria ottica, ricercatore in biomedicina.',
+    whoP2: 'Ho sempre creduto che l\'esercizio mentale quotidiano abbia un valore reale. QuRealm è il mio tentativo di renderlo divertente.',
+    quote: '"La matematica è l\'unico linguaggio veramente universale. QuRealm lo parla ogni giorno."',
+    whatH: 'Cos\'è QuRealm?',
+    whatP1: 'QuRealm è un puzzle matematico quotidiano gratuito. Ogni giorno a mezzanotte UTC viene generato un nuovo puzzle — lo stesso per tutti i giocatori del mondo.',
+    whatP2: 'Il concetto: con 4 numeri, raggiungi un obiettivo usando +, −, ×, ÷. Puoi concatenare le operazioni.',
+    whatP3: 'QuRealm ha modalità Facile e Difficile. Facile: obiettivi tra 10-50. Difficile: fino a 50-200.',
+    princH: 'I nostri principi',
+    v1t: 'Sempre gratuito', v1d: 'Nessun abbonamento. Mai.',
+    v2t: 'Nessun dato', v2d: 'Le statistiche restano nel tuo browser.',
+    v3t: 'Veramente globale', v3d: '9 lingue. Lo stesso puzzle per tutti.',
+    v4t: 'Aggiornamento giornaliero', v4d: 'Nuovo puzzle ogni giorno a mezzanotte UTC.',
+    fGame: 'Gioco', fContact: 'Contatti', fPrivacy: 'Privacy',
+  },
+  pt: {
+    back: '← Voltar ao jogo', title: 'Sobre o QuRealm', sub: 'Um puzzle matemático diário gratuito para todos.',
+    whoH: 'Quem está por trás?', role: 'Doutor em Engenharia Óptica · Pesquisador em Biomedicina',
+    whoP1: 'Sou cientista, doutor em engenharia óptica, pesquisador em biomedicina.',
+    whoP2: 'Sempre acreditei que o exercício mental diário tem valor real. QuRealm é minha tentativa de torná-lo divertido.',
+    quote: '"A matemática é a única linguagem verdadeiramente universal. QuRealm a fala todos os dias."',
+    whatH: 'O que é o QuRealm?',
+    whatP1: 'QuRealm é um puzzle matemático diário gratuito. Todo dia à meia-noite UTC, um novo puzzle é gerado — o mesmo para todos os jogadores do mundo.',
+    whatP2: 'O conceito: com 4 números, alcance um alvo usando +, −, ×, ÷. Você pode encadear operações.',
+    whatP3: 'QuRealm tem modos Fácil e Difícil. Fácil: alvos entre 10-50. Difícil: até 50-200.',
+    princH: 'Nossos princípios',
+    v1t: 'Sempre gratuito', v1d: 'Sem assinaturas. Nunca.',
+    v2t: 'Sem dados', v2d: 'As estatísticas ficam no seu navegador.',
+    v3t: 'Verdadeiramente global', v3d: '9 idiomas. O mesmo puzzle para todos.',
+    v4t: 'Atualização diária', v4d: 'Novo puzzle todo dia à meia-noite UTC.',
+    fGame: 'Jogo', fContact: 'Contato', fPrivacy: 'Privacidade',
+  },
+  zh: {
+    back: '← 返回游戏', title: '关于 QuRealm', sub: '面向所有人的免费每日数学谜题。',
+    whoH: '谁在背后？', role: '光学工程博士 · 生物医学研究员',
+    whoP1: '我是一名科学家，光学工程博士，从事生物医学研究。',
+    whoP2: '我始终相信每日脑力锻炼有真正的价值。QuRealm 是我让它变得有趣的尝试。',
+    quote: '"数学是唯一真正通用的语言。QuRealm 每天都在说它。"',
+    whatH: 'QuRealm 是什么？',
+    whatP1: 'QuRealm 是一款免费的每日数学谜题。每天UTC午夜生成新谜题，全球所有玩家相同。',
+    whatP2: '概念：用4个数字通过 +, −, ×, ÷ 达到目标。可以链式运算。听起来简单，其实不然。',
+    whatP3: 'QuRealm 支持简单和困难模式。简单：目标10-50。困难：50-200。',
+    princH: '我们的原则',
+    v1t: '永远免费', v1d: '无订阅，无付费墙。永远。',
+    v2t: '不收集数据', v2d: '统计数据留在您的浏览器中。',
+    v3t: '真正全球化', v3d: '9种语言。所有人同一个谜题。',
+    v4t: '每日更新', v4d: '每天UTC午夜更新谜题。',
+    fGame: '游戏', fContact: '联系', fPrivacy: '隐私',
+  },
+  hi: {
+    back: '← खेल पर वापस जाएं', title: 'QuRealm के बारे में', sub: 'सभी के लिए एक मुफ़्त दैनिक गणित पहेली।',
+    whoH: 'इसके पीछे कौन है?', role: 'ऑप्टिकल इंजीनियरिंग में पीएचडी · बायोमेडिकल शोधकर्ता',
+    whoP1: 'मैं एक वैज्ञानिक हूं, ऑप्टिकल इंजीनियरिंग में पीएचडी, बायोमेडिकल शोध में काम करता हूं।',
+    whoP2: 'मुझे हमेशा विश्वास रहा है कि दैनिक मानसिक व्यायाम का वास्तविक मूल्य है। QuRealm इसे मज़ेदार बनाने का मेरा प्रयास है।',
+    quote: '"गणित एकमात्र सार्वभौमिक भाषा है। QuRealm इसे हर दिन बोलता है।"',
+    whatH: 'QuRealm क्या है?',
+    whatP1: 'QuRealm एक मुफ़्त दैनिक गणित पहेली है। हर दिन UTC मध्यरात्रि पर नई पहेली बनती है — दुनिया भर के सभी खिलाड़ियों के लिए एक समान।',
+    whatP2: 'अवधारणा: 4 संख्याओं से +, −, ×, ÷ का उपयोग करके लक्ष्य तक पहुँचें।',
+    whatP3: 'QuRealm में आसान और कठिन मोड हैं। आसान: लक्ष्य 10-50। कठिन: 50-200।',
+    princH: 'हमारे सिद्धांत',
+    v1t: 'हमेशा मुफ़्त', v1d: 'कोई सदस्यता नहीं। कभी नहीं।',
+    v2t: 'कोई डेटा नहीं', v2d: 'आँकड़े आपके ब्राउज़र में रहते हैं।',
+    v3t: 'सच में वैश्विक', v3d: '9 भाषाएँ। सभी के लिए एक पहेली।',
+    v4t: 'दैनिक अपडेट', v4d: 'UTC मध्यरात्रि पर नई पहेली।',
+    fGame: 'खेल', fContact: 'संपर्क', fPrivacy: 'गोपनीयता',
+  },
+  ja: {
+    back: '← ゲームに戻る', title: 'QuRealmについて', sub: '誰でも楽しめる無料の毎日数学パズル。',
+    whoH: '誰が作ったの？', role: '光学工学博士 · 生物医学研究者',
+    whoP1: '私は科学者で、光学工学の博士号を持ち、生物医学研究に従事しています。',
+    whoP2: '毎日の知的トレーニングには本当の価値があると常に信じています。QuRealmはそれを楽しくする試みです。',
+    quote: '"数学は唯一の真に普遍的な言語。QuRealmは毎日それを語ります。"',
+    whatH: 'QuRealmとは？',
+    whatP1: 'QuRealmは無料の毎日数学パズルです。毎日UTC深夜に新しいパズルが生成され、世界中のすべてのプレイヤーに同じパズルが出題されます。',
+    whatP2: 'コンセプト：4つの数字を使って +, −, ×, ÷ で目標に到達。操作を連鎖できます。',
+    whatP3: 'QuRealmには「かんたん」と「むずかしい」モードがあります。かんたん：目標10-50。むずかしい：50-200。',
+    princH: '私たちの原則',
+    v1t: 'いつも無料', v1d: 'サブスクなし。永遠に。',
+    v2t: 'データ収集なし', v2d: '統計はブラウザに保存。送信なし。',
+    v3t: '真にグローバル', v3d: '9言語。全員同じパズル。',
+    v4t: '毎日更新', v4d: '毎日UTC深夜に新しいパズル。',
+    fGame: 'ゲーム', fContact: 'お問い合わせ', fPrivacy: 'プライバシー',
+  },
+};
+
+function applyLang(l) {
+  const t = T[l] || T.en;
+  document.getElementById('back-link').textContent = t.back;
+  document.getElementById('t-title').textContent = t.title;
+  document.getElementById('t-sub').textContent = t.sub;
+  document.getElementById('t-who-h').textContent = t.whoH;
+  document.getElementById('t-role').textContent = t.role;
+  document.getElementById('t-who-p1').textContent = t.whoP1;
+  document.getElementById('t-who-p2').textContent = t.whoP2;
+  document.getElementById('t-quote').textContent = t.quote;
+  document.getElementById('t-what-h').textContent = t.whatH;
+  document.getElementById('t-what-p1').textContent = t.whatP1;
+  document.getElementById('t-what-p2').textContent = t.whatP2;
+  document.getElementById('t-what-p3').textContent = t.whatP3;
+  document.getElementById('t-princ-h').textContent = t.princH;
+  document.getElementById('t-v1t').textContent = t.v1t;
+  document.getElementById('t-v1d').textContent = t.v1d;
+  document.getElementById('t-v2t').textContent = t.v2t;
+  document.getElementById('t-v2d').textContent = t.v2d;
+  document.getElementById('t-v3t').textContent = t.v3t;
+  document.getElementById('t-v3d').textContent = t.v3d;
+  document.getElementById('t-v4t').textContent = t.v4t;
+  document.getElementById('t-v4d').textContent = t.v4d;
+  document.getElementById('f-game').textContent = t.fGame;
+  document.getElementById('f-contact').textContent = t.fContact;
+  document.getElementById('f-privacy').textContent = t.fPrivacy;
+  document.documentElement.lang = l;
+}
+
+const lang = localStorage.getItem('qurealm_lang') || 'en';
+applyLang(lang);
+</script>
 </body>
 </html>

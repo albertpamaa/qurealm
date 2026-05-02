@@ -45,15 +45,15 @@
 <body>
 <header>
   <a href="/" class="logo">Qu<span>Realm</span></a>
-  <a href="/" class="back">← Back to game</a>
+  <a href="/" class="back" id="back-link">← Back to game</a>
 </header>
 <main>
-  <div class="page-title">Contact</div>
-  <div class="page-sub">We'd love to hear from you. Bugs, ideas, feedback — all welcome.</div>
+  <div class="page-title" id="t-title">Contact</div>
+  <div class="page-sub" id="t-sub">We'd love to hear from you. Bugs, ideas, feedback — all welcome.</div>
 
   <div class="card">
-    <h2>✉️ Email</h2>
-    <p>We try to respond within 48 hours.</p>
+    <h2 id="t-email-h">✉️ Email</h2>
+    <p id="t-email-p">We try to respond within 48 hours.</p>
     <div class="email-btn" onclick="copyEmail()">
       <span class="email-icon">📬</span>
       <span class="email-addr">qrealmcontact@gmail.com</span>
@@ -62,31 +62,161 @@
   </div>
 
   <div class="card">
-    <h2>What can you write to us about?</h2>
+    <h2 id="t-topics-h">What can you write to us about?</h2>
     <div class="topics">
-      <div class="topic"><span class="topic-icon">🐛</span><div class="topic-text"><strong>Bug report</strong>A puzzle that seems wrong, a broken UI, anything unexpected.</div></div>
-      <div class="topic"><span class="topic-icon">💡</span><div class="topic-text"><strong>Feature suggestion</strong>New game modes, new languages, accessibility improvements.</div></div>
-      <div class="topic"><span class="topic-icon">🤝</span><div class="topic-text"><strong>Collaboration</strong>If you represent a brand or service and want to explore a partnership.</div></div>
-      <div class="topic"><span class="topic-icon">📰</span><div class="topic-text"><strong>Press</strong>If you'd like to write about QuRealm, we're happy to help.</div></div>
+      <div class="topic"><span class="topic-icon">🐛</span><div class="topic-text"><strong id="t-t1h">Bug report</strong><span id="t-t1d">A puzzle that seems wrong, a broken UI, anything unexpected.</span></div></div>
+      <div class="topic"><span class="topic-icon">💡</span><div class="topic-text"><strong id="t-t2h">Feature suggestion</strong><span id="t-t2d">New game modes, new languages, accessibility improvements.</span></div></div>
+      <div class="topic"><span class="topic-icon">🤝</span><div class="topic-text"><strong id="t-t3h">Collaboration</strong><span id="t-t3d">If you represent a brand or service and want to explore a partnership.</span></div></div>
+      <div class="topic"><span class="topic-icon">📰</span><div class="topic-text"><strong id="t-t4h">Press</strong><span id="t-t4d">If you'd like to write about QuRealm, we're happy to help.</span></div></div>
     </div>
   </div>
 
-  <div class="notice">⚠️ QuRealm does not provide math tutoring or personalized puzzle support. For general feedback only.</div>
+  <div class="notice" id="t-notice">⚠️ QuRealm does not provide math tutoring or personalized puzzle support. For general feedback only.</div>
 </main>
 <div class="toast" id="toast"></div>
 <footer>
   <p>© 2026 QuRealm</p>
-  <p style="margin-top:6px"><a href="/">Game</a><a href="/about.html">About</a><a href="/privacy.html">Privacy</a></p>
+  <p style="margin-top:6px"><a href="/" id="f-game">Game</a><a href="/about.html" id="f-about">About</a><a href="/privacy.html" id="f-privacy">Privacy</a></p>
 </footer>
 <script>
+const T = {
+  en: {
+    back: '← Back to game', title: 'Contact', sub: "We'd love to hear from you. Bugs, ideas, feedback — all welcome.",
+    emailH: '✉️ Email', emailP: 'We try to respond within 48 hours.', copy: 'Copy', copied: 'Copied!',
+    topicsH: 'What can you write to us about?',
+    t1h: 'Bug report', t1d: 'A puzzle that seems wrong, a broken UI, anything unexpected.',
+    t2h: 'Feature suggestion', t2d: 'New game modes, new languages, accessibility improvements.',
+    t3h: 'Collaboration', t3d: 'If you represent a brand or service and want to explore a partnership.',
+    t4h: 'Press', t4d: "If you'd like to write about QuRealm, we're happy to help.",
+    notice: '⚠️ QuRealm does not provide math tutoring or personalized puzzle support. For general feedback only.',
+    fGame: 'Game', fAbout: 'About', fPrivacy: 'Privacy',
+  },
+  es: {
+    back: '← Volver al juego', title: 'Contacto', sub: 'Nos encantaría saber de ti. Bugs, ideas, feedback — todo es bienvenido.',
+    emailH: '✉️ Email', emailP: 'Intentamos responder en un plazo de 48 horas.', copy: 'Copiar', copied: '¡Copiado!',
+    topicsH: '¿De qué puedes escribirnos?',
+    t1h: 'Reporte de error', t1d: 'Un puzzle incorrecto, un fallo de interfaz, algo inesperado.',
+    t2h: 'Sugerencia', t2d: 'Nuevos modos, nuevos idiomas, mejoras de accesibilidad.',
+    t3h: 'Colaboración', t3d: 'Si representas una marca y quieres explorar una colaboración.',
+    t4h: 'Prensa', t4d: 'Si quieres escribir sobre QuRealm, estaremos encantados de ayudarte.',
+    notice: '⚠️ QuRealm no ofrece tutorías matemáticas. Solo feedback general.',
+    fGame: 'Juego', fAbout: 'Sobre nosotros', fPrivacy: 'Privacidad',
+  },
+  fr: {
+    back: '← Retour au jeu', title: 'Contact', sub: 'Nous serions ravis de vous entendre. Bugs, idées, retours — tout est bienvenu.',
+    emailH: '✉️ Email', emailP: 'Nous répondons sous 48 heures.', copy: 'Copier', copied: 'Copié !',
+    topicsH: 'De quoi pouvez-vous nous écrire ?',
+    t1h: 'Signaler un bug', t1d: 'Un puzzle incorrect, une interface cassée, quelque chose d\'inattendu.',
+    t2h: 'Suggestion', t2d: 'Nouveaux modes, nouvelles langues, améliorations d\'accessibilité.',
+    t3h: 'Collaboration', t3d: 'Si vous représentez une marque et souhaitez explorer un partenariat.',
+    t4h: 'Presse', t4d: 'Si vous souhaitez écrire sur QuRealm, nous sommes heureux d\'aider.',
+    notice: '⚠️ QuRealm ne fournit pas de tutorat mathématique. Retours généraux uniquement.',
+    fGame: 'Jeu', fAbout: 'À propos', fPrivacy: 'Confidentialité',
+  },
+  de: {
+    back: '← Zurück zum Spiel', title: 'Kontakt', sub: 'Wir freuen uns von Ihnen zu hören. Bugs, Ideen, Feedback — alles willkommen.',
+    emailH: '✉️ E-Mail', emailP: 'Wir antworten innerhalb von 48 Stunden.', copy: 'Kopieren', copied: 'Kopiert!',
+    topicsH: 'Worüber können Sie uns schreiben?',
+    t1h: 'Fehler melden', t1d: 'Ein falsches Rätsel, eine kaputte Benutzeroberfläche, etwas Unerwartetes.',
+    t2h: 'Funktionsvorschlag', t2d: 'Neue Modi, neue Sprachen, Verbesserungen der Barrierefreiheit.',
+    t3h: 'Zusammenarbeit', t3d: 'Wenn Sie eine Marke vertreten und eine Partnerschaft erkunden möchten.',
+    t4h: 'Presse', t4d: 'Wenn Sie über QuRealm schreiben möchten, helfen wir gerne.',
+    notice: '⚠️ QuRealm bietet keine Mathenachhilfe an. Nur allgemeines Feedback.',
+    fGame: 'Spiel', fAbout: 'Über uns', fPrivacy: 'Datenschutz',
+  },
+  it: {
+    back: '← Torna al gioco', title: 'Contatti', sub: 'Ci farebbe piacere sentirti. Bug, idee, feedback — tutto è benvenuto.',
+    emailH: '✉️ Email', emailP: 'Cerchiamo di rispondere entro 48 ore.', copy: 'Copia', copied: 'Copiato!',
+    topicsH: 'Di cosa puoi scriverci?',
+    t1h: 'Segnala un bug', t1d: 'Un puzzle errato, un\'interfaccia rotta, qualcosa di inaspettato.',
+    t2h: 'Suggerimento', t2d: 'Nuove modalità, nuove lingue, miglioramenti dell\'accessibilità.',
+    t3h: 'Collaborazione', t3d: 'Se rappresenti un brand e vuoi esplorare una partnership.',
+    t4h: 'Stampa', t4d: 'Se vuoi scrivere di QuRealm, siamo felici di aiutarti.',
+    notice: '⚠️ QuRealm non fornisce tutoraggio matematico. Solo feedback generale.',
+    fGame: 'Gioco', fAbout: 'Chi siamo', fPrivacy: 'Privacy',
+  },
+  pt: {
+    back: '← Voltar ao jogo', title: 'Contato', sub: 'Adoraríamos ouvir de você. Bugs, ideias, feedback — tudo é bem-vindo.',
+    emailH: '✉️ Email', emailP: 'Tentamos responder em até 48 horas.', copy: 'Copiar', copied: 'Copiado!',
+    topicsH: 'Sobre o que você pode nos escrever?',
+    t1h: 'Reportar bug', t1d: 'Um puzzle incorreto, interface quebrada, algo inesperado.',
+    t2h: 'Sugestão', t2d: 'Novos modos, novos idiomas, melhorias de acessibilidade.',
+    t3h: 'Colaboração', t3d: 'Se você representa uma marca e quer explorar uma parceria.',
+    t4h: 'Imprensa', t4d: 'Se quiser escrever sobre o QuRealm, estamos felizes em ajudar.',
+    notice: '⚠️ QuRealm não oferece tutoria matemática. Apenas feedback geral.',
+    fGame: 'Jogo', fAbout: 'Sobre', fPrivacy: 'Privacidade',
+  },
+  zh: {
+    back: '← 返回游戏', title: '联系我们', sub: '欢迎反馈。Bug、想法、建议——一切都欢迎。',
+    emailH: '✉️ 邮件', emailP: '我们会在48小时内回复。', copy: '复制', copied: '已复制！',
+    topicsH: '你可以写什么？',
+    t1h: '报告错误', t1d: '谜题错误、界面问题、任何异常。',
+    t2h: '功能建议', t2d: '新游戏模式、新语言、无障碍改进。',
+    t3h: '合作', t3d: '如果您代表品牌并希望探索合作关系。',
+    t4h: '媒体', t4d: '如果您想报道QuRealm，我们很乐意提供帮助。',
+    notice: '⚠️ QuRealm不提供数学辅导。仅接受一般反馈。',
+    fGame: '游戏', fAbout: '关于', fPrivacy: '隐私',
+  },
+  hi: {
+    back: '← खेल पर वापस जाएं', title: 'संपर्क', sub: 'हम आपसे सुनना चाहते हैं। बग, विचार, फ़ीडबैक — सब स्वागत है।',
+    emailH: '✉️ ईमेल', emailP: 'हम 48 घंटे में जवाब देते हैं।', copy: 'कॉपी', copied: 'कॉपी हो गया!',
+    topicsH: 'आप हमें किस बारे में लिख सकते हैं?',
+    t1h: 'बग रिपोर्ट', t1d: 'गलत पहेली, टूटा हुआ UI, कुछ अप्रत्याशित।',
+    t2h: 'सुझाव', t2d: 'नए मोड, नई भाषाएँ, एक्सेसिबिलिटी सुधार।',
+    t3h: 'सहयोग', t3d: 'यदि आप किसी ब्रांड का प्रतिनिधित्व करते हैं।',
+    t4h: 'प्रेस', t4d: 'यदि आप QuRealm के बारे में लिखना चाहते हैं।',
+    notice: '⚠️ QuRealm गणित ट्यूटोरिंग नहीं देता। केवल सामान्य फ़ीडबैक।',
+    fGame: 'खेल', fAbout: 'हमारे बारे में', fPrivacy: 'गोपनीयता',
+  },
+  ja: {
+    back: '← ゲームに戻る', title: 'お問い合わせ', sub: 'ご意見をお待ちしています。バグ、アイデア、フィードバック — 何でも歓迎。',
+    emailH: '✉️ メール', emailP: '48時間以内に返信します。', copy: 'コピー', copied: 'コピーしました！',
+    topicsH: '何について書けますか？',
+    t1h: 'バグ報告', t1d: '間違ったパズル、壊れたUI、予期しないこと。',
+    t2h: '機能提案', t2d: '新しいゲームモード、新言語、アクセシビリティ改善。',
+    t3h: 'コラボレーション', t3d: 'ブランドを代表してパートナーシップを探っている場合。',
+    t4h: 'プレス', t4d: 'QuRealmについて書きたい場合は、喜んでお手伝いします。',
+    notice: '⚠️ QuRealmは数学の個別指導を提供しません。一般的なフィードバックのみ。',
+    fGame: 'ゲーム', fAbout: '概要', fPrivacy: 'プライバシー',
+  },
+};
+
+function applyLang(l) {
+  const t = T[l] || T.en;
+  document.getElementById('back-link').textContent = t.back;
+  document.getElementById('t-title').textContent = t.title;
+  document.getElementById('t-sub').textContent = t.sub;
+  document.getElementById('t-email-h').textContent = t.emailH;
+  document.getElementById('t-email-p').textContent = t.emailP;
+  document.getElementById('copy-btn').textContent = t.copy;
+  document.getElementById('t-topics-h').textContent = t.topicsH;
+  document.getElementById('t-t1h').textContent = t.t1h;
+  document.getElementById('t-t1d').textContent = t.t1d;
+  document.getElementById('t-t2h').textContent = t.t2h;
+  document.getElementById('t-t2d').textContent = t.t2d;
+  document.getElementById('t-t3h').textContent = t.t3h;
+  document.getElementById('t-t3d').textContent = t.t3d;
+  document.getElementById('t-t4h').textContent = t.t4h;
+  document.getElementById('t-t4d').textContent = t.t4d;
+  document.getElementById('t-notice').textContent = t.notice;
+  document.getElementById('f-game').textContent = t.fGame;
+  document.getElementById('f-about').textContent = t.fAbout;
+  document.getElementById('f-privacy').textContent = t.fPrivacy;
+  document.documentElement.lang = l;
+}
+
+const lang = localStorage.getItem('qurealm_lang') || 'en';
+applyLang(lang);
+
 function copyEmail() {
-  navigator.clipboard.writeText("qrealmcontact@gmail.com").then(() => {
-    const toast = document.getElementById("toast");
-    toast.textContent = "Copied!";
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2000);
-    document.getElementById("copy-btn").textContent = "✓";
-    setTimeout(() => document.getElementById("copy-btn").textContent = "Copy", 2000);
+  const t = T[lang] || T.en;
+  navigator.clipboard.writeText('qrealmcontact@gmail.com').then(() => {
+    const toast = document.getElementById('toast');
+    toast.textContent = t.copied;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+    document.getElementById('copy-btn').textContent = '✓';
+    setTimeout(() => document.getElementById('copy-btn').textContent = t.copy, 2000);
   });
 }
 </script>

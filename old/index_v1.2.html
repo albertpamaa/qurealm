@@ -264,8 +264,8 @@
     </div>
 
     <div class="diff-row">
-      <button class="diff-btn active-easy" id="diff-easy" onclick="setDifficulty('easy')">🟢 <span data-i18n="diff.easy">Easy</span></button>
-      <button class="diff-btn" id="diff-hard" onclick="setDifficulty('hard')">🔴 <span data-i18n="diff.hard">Hard</span></button>
+      <button class="diff-btn active-easy" id="diff-easy" onclick="setDifficulty('easy')">🟢 Easy</button>
+      <button class="diff-btn" id="diff-hard" onclick="setDifficulty('hard')">🔴 Hard</button>
     </div>
 
     <div class="target-section">
@@ -276,6 +276,21 @@
     <div class="numbers-section">
       <div class="numbers-label" data-i18n="game.yournumbers">Your numbers</div>
       <div class="numbers-grid" id="numbers-grid"></div>
+    </div>
+
+    <!-- ATTEMPTS BAR -->
+    <div class="attempts-bar">
+      <div class="attempts-label">
+        <span data-i18n="game.attempts">Attempts</span>
+        <span id="attempts-counter">0/10</span>
+      </div>
+      <div class="attempts-dots" id="attempts-dots"></div>
+    </div>
+
+    <!-- CURRENT RUNNING VALUE -->
+    <div class="current-val-display" id="current-val-display">
+      <div class="cvd-label" data-i18n="game.running">Running total</div>
+      <div class="cvd-val" id="current-val-text">—</div>
     </div>
 
     <div class="operators-section">
@@ -299,21 +314,6 @@
         <button class="btn-secondary" onclick="clearExpr()" data-i18n="game.clear">Clear</button>
         <button class="btn-secondary" onclick="showSolution()" data-i18n="game.solve">👁 Solution</button>
       </div>
-    </div>
-
-    <!-- ATTEMPTS BAR -->
-    <div class="attempts-bar">
-      <div class="attempts-label">
-        <span data-i18n="game.attempts">Attempts</span>
-        <span id="attempts-counter">0/10</span>
-      </div>
-      <div class="attempts-dots" id="attempts-dots"></div>
-    </div>
-
-    <!-- CURRENT RUNNING VALUE -->
-    <div class="current-val-display" id="current-val-display">
-      <div class="cvd-label" data-i18n="game.running">Running total</div>
-      <div class="cvd-val" id="current-val-text">—</div>
     </div>
 
     <!-- HISTORY -->
@@ -373,8 +373,8 @@
       </div>
     </div>
     <div class="example-box">
-      <span data-i18n="how.example">Example: target = </span><span>24</span>, <span data-i18n="how.numbers">numbers</span> = <span>3, 4, 6, 2</span><br>
-      → <span>3 × (4 + 4) = 24</span> ✓ &nbsp;<span data-i18n="how.or">or</span>&nbsp; <span>6 × 4 = 24</span> ✓
+      <span data-i18n="how.example">Example: target = </span><span>24</span>, numbers = <span>3, 4, 6, 2</span><br>
+      → <span>3 × (4 + 4) = 24</span> ✓ &nbsp;or&nbsp; <span>6 × 4 = 24</span> ✓
     </div>
   </div>
 
@@ -432,8 +432,6 @@ const T = {
     'how.step3': 'You can use each number <strong>only once</strong>. You don\'t have to use all 4.',
     'how.step4': 'When your expression equals the target, hit <strong>Check solution</strong>!',
     'how.example': 'Example: target = ',
-    'how.numbers': 'numbers',
-    'how.or': 'or',
     'about.title': 'About QuRealm',
     'about.p1': 'QuRealm is a free, independent daily math puzzle. Every day at midnight UTC, a new puzzle is generated — the same puzzle for every player in the world.',
     'about.p2': 'The concept is simple: given 4 numbers, reach a target using basic arithmetic. It sounds easy. It isn\'t always.',
@@ -457,8 +455,6 @@ const T = {
     'footer.tagline': 'A new puzzle every day. Free forever.',
     'nav.privacy': 'Privacy',
     'game.solve': '👁 Solution',
-    'diff.easy': 'Easy',
-    'diff.hard': 'Hard',
     'result.win': '🎉 Solved it!',
     'result.lose': '😅 Not today',
     'result.win.desc': 'Great job! You found a valid solution.',
@@ -499,8 +495,6 @@ const T = {
     'how.step3': 'Puedes usar cada número <strong>solo una vez</strong>. No tienes que usarlos todos.',
     'how.step4': 'Cuando tu expresión iguale el objetivo, ¡pulsa <strong>Comprobar solución</strong>!',
     'how.example': 'Ejemplo: objetivo = ',
-    'how.numbers': 'números',
-    'how.or': 'o',
     'about.title': 'Sobre QuRealm',
     'about.p1': 'QuRealm es un puzzle matemático diario gratuito e independiente. Cada día a medianoche UTC se genera un nuevo puzzle, el mismo para todos los jugadores del mundo.',
     'about.p2': 'El concepto es sencillo: dados 4 números, llega a un objetivo usando aritmética básica. Parece fácil. No siempre lo es.',
@@ -524,8 +518,6 @@ const T = {
     'footer.tagline': 'Un puzzle nuevo cada día. Gratis para siempre.',
     'nav.privacy': 'Privacidad',
     'game.solve': '👁 Solución',
-    'diff.easy': 'Fácil',
-    'diff.hard': 'Difícil',
     'result.win': '🎉 ¡Resuelto!',
     'result.lose': '😅 Mañana será',
     'result.win.desc': '¡Bien hecho! Has encontrado una solución válida.',
@@ -553,7 +545,7 @@ const T = {
     'how.step2':'Touchez un chiffre, puis un opérateur, puis un autre chiffre.',
     'how.step3':'Chaque chiffre ne peut être utilisé <strong>qu\'une seule fois</strong>.',
     'how.step4':'Quand votre expression égale la cible, appuyez sur <strong>Vérifier</strong>!',
-    'how.example':'Exemple: cible = ','how.numbers':'nombres','how.or':'ou',
+    'how.example':'Exemple: cible = ',
     'about.title':'À propos','about.p1':'Puzzle quotidien gratuit. Même puzzle pour tous chaque jour.',
     'about.p2':'Avec 4 chiffres, atteignez une cible.','about.quote':'"Les maths: langue universelle."',
     'about.p3':'Pas de compte. Pas de pub. Aucune donnée.','about.p4':'Créé par un chercheur.',
@@ -568,7 +560,6 @@ const T = {
     'result.win.desc':'Bravo!','result.lose.desc':'Bonne chance demain! Une solution:',
     'result.next':'Prochain puzzle dans:','hint.msg':'Essayez de faire ','copied':'Copié!',
     'already.played':'Déjà joué aujourd\'hui! Revenez demain.',
-    'diff.easy':'Facile','diff.hard':'Difficile',
   },
   de: {
     'nav.how':'Anleitung','nav.about':'Über uns','nav.contact':'Kontakt','nav.game':'Spiel',
@@ -582,7 +573,7 @@ const T = {
     'how.step2':'Tippe eine Zahl, dann einen Operator, dann eine weitere Zahl.',
     'how.step3':'Jede Zahl kann <strong>nur einmal</strong> verwendet werden.',
     'how.step4':'Wenn dein Ausdruck dem Ziel entspricht, drücke <strong>Lösung prüfen</strong>!',
-    'how.example':'Beispiel: Ziel = ','how.numbers':'Zahlen','how.or':'oder',
+    'how.example':'Beispiel: Ziel = ',
     'about.title':'Über QuRealm','about.p1':'Kostenloses tägliches Mathe-Rätsel.',
     'about.p2':'Erreiche eine Zielzahl mit 4 Zahlen.','about.quote':'"Mathe ist die universelle Sprache."',
     'about.p3':'Keine Konten. Keine Werbung. Keine Daten.','about.p4':'Von einem Forscher entwickelt.',
@@ -597,7 +588,6 @@ const T = {
     'result.win.desc':'Gut gemacht!','result.lose.desc':'Viel Glück morgen! Eine Lösung:',
     'result.next':'Nächstes Rätsel in:','hint.msg':'Versuche ','copied':'Kopiert!',
     'already.played':'Heute schon gespielt! Morgen wiederkommen.',
-    'diff.easy':'Leicht','diff.hard':'Schwer',
   },
   it: {
     'nav.how':'Come giocare','nav.about':'Chi siamo','nav.contact':'Contatti','nav.game':'Gioco',
@@ -611,7 +601,7 @@ const T = {
     'how.step2':'Tocca un numero, poi un operatore, poi un altro numero.',
     'how.step3':'Ogni numero può essere usato <strong>una sola volta</strong>.',
     'how.step4':'Quando l\'espressione eguaglia l\'obiettivo, premi <strong>Verifica</strong>!',
-    'how.example':'Esempio: obiettivo = ','how.numbers':'numeri','how.or':'o',
+    'how.example':'Esempio: obiettivo = ',
     'about.title':'Chi siamo','about.p1':'Puzzle matematico quotidiano gratuito.',
     'about.p2':'Con 4 numeri raggiungi un obiettivo.','about.quote':'"La matematica è universale."',
     'about.p3':'Nessun account. Nessuna pubblicità.','about.p4':'Creato da un ricercatore.',
@@ -626,7 +616,6 @@ const T = {
     'result.win.desc':'Ottimo!','result.lose.desc':'Buona fortuna domani! Una soluzione:',
     'result.next':'Prossimo puzzle tra:','hint.msg':'Prova a fare ','copied':'Copiato!',
     'already.played':'Hai già giocato oggi! Torna domani.',
-    'diff.easy':'Facile','diff.hard':'Difficile',
   },
   pt: {
     'nav.how':'Como jogar','nav.about':'Sobre','nav.contact':'Contato','nav.game':'Jogo',
@@ -640,7 +629,7 @@ const T = {
     'how.step2':'Toque um número, depois um operador, depois outro número.',
     'how.step3':'Cada número pode ser usado <strong>apenas uma vez</strong>.',
     'how.step4':'Quando a expressão igualar o alvo, clique em <strong>Verificar</strong>!',
-    'how.example':'Exemplo: alvo = ','how.numbers':'números','how.or':'ou',
+    'how.example':'Exemplo: alvo = ',
     'about.title':'Sobre QuRealm','about.p1':'Puzzle matemático diário gratuito.',
     'about.p2':'Com 4 números alcance um alvo.','about.quote':'"Matemática é linguagem universal."',
     'about.p3':'Sem contas. Sem anúncios.','about.p4':'Criado por um pesquisador.',
@@ -655,7 +644,6 @@ const T = {
     'result.win.desc':'Ótimo!','result.lose.desc':'Boa sorte amanhã! Uma solução:',
     'result.next':'Próximo puzzle em:','hint.msg':'Tente fazer ','copied':'Copiado!',
     'already.played':'Já jogou hoje! Volte amanhã.',
-    'diff.easy':'Fácil','diff.hard':'Difícil',
   },
   zh: {
     'nav.how':'如何游玩','nav.about':'关于','nav.contact':'联系我们','nav.game':'游戏',
@@ -669,7 +657,7 @@ const T = {
     'how.step2':'点击数字，选择运算符，再点击另一个数字。',
     'how.step3':'每个数字<strong>只能使用一次</strong>。',
     'how.step4':'算式等于目标时点击<strong>检查答案</strong>！',
-    'how.example':'示例：目标 = ','how.numbers':'数字','how.or':'或',
+    'how.example':'示例：目标 = ',
     'about.title':'关于 QuRealm','about.p1':'免费每日数学谜题。UTC午夜同步。',
     'about.p2':'用4个数字达到目标。','about.quote':'"数学是通用语言。"',
     'about.p3':'无账户，无广告，不收集数据。','about.p4':'由研究员创建。',
@@ -684,7 +672,6 @@ const T = {
     'result.win.desc':'干得好！','result.lose.desc':'明天加油！解法：',
     'result.next':'下一个谜题：','hint.msg':'试试先做 ','copied':'已复制！',
     'already.played':'今天已经玩过了！明天再来。',
-    'diff.easy':'简单','diff.hard':'困难',
   },
   hi: {
     'nav.how':'कैसे खेलें','nav.about':'हमारे बारे में','nav.contact':'संपर्क','nav.game':'खेल',
@@ -698,7 +685,7 @@ const T = {
     'how.step2':'संख्या, ऑपरेटर, फिर संख्या दबाएँ।',
     'how.step3':'हर संख्या <strong>एक बार</strong> उपयोग करें।',
     'how.step4':'लक्ष्य बराबर होने पर <strong>हल जाँचें</strong> दबाएँ!',
-    'how.example':'उदाहरण: लक्ष्य = ','how.numbers':'संख्याएँ','how.or':'या',
+    'how.example':'उदाहरण: लक्ष्य = ',
     'about.title':'QuRealm के बारे में','about.p1':'मुफ़्त दैनिक गणित पहेली।',
     'about.p2':'4 संख्याओं से लक्ष्य तक।','about.quote':'"गणित सार्वभौमिक भाषा है।"',
     'about.p3':'कोई खाता नहीं, विज्ञापन नहीं।','about.p4':'एक शोधकर्ता द्वारा।',
@@ -713,7 +700,6 @@ const T = {
     'result.win.desc':'शाबाश!','result.lose.desc':'कल फिर! एक हल:',
     'result.next':'अगली पहेली:','hint.msg':'पहले बनाएँ ','copied':'कॉपी हो गया!',
     'already.played':'आज खेल चुके हैं! कल आएँ।',
-    'diff.easy':'आसान','diff.hard':'कठिन',
   },
   ja: {
     'nav.how':'遊び方','nav.about':'概要','nav.contact':'お問い合わせ','nav.game':'ゲーム',
@@ -727,7 +713,7 @@ const T = {
     'how.step2':'数字→演算子→数字の順にタップ。',
     'how.step3':'各数字は<strong>1回のみ</strong>使用可能。',
     'how.step4':'式が目標と等しくなったら<strong>答えを確認</strong>！',
-    'how.example':'例：目標 = ','how.numbers':'数字','how.or':'または',
+    'how.example':'例：目標 = ',
     'about.title':'QuRealmについて','about.p1':'無料の毎日数学パズル。UTC深夜に新パズル。',
     'about.p2':'4つの数字で目標に到達。','about.quote':'"数学は共通言語。"',
     'about.p3':'アカウント不要。広告なし。','about.p4':'研究者が作りました。',
@@ -742,7 +728,6 @@ const T = {
     'result.win.desc':'よくできました！','result.lose.desc':'明日また！解答：',
     'result.next':'次のパズルまで：','hint.msg':'まず作ってみて ','copied':'コピーしました！',
     'already.played':'今日はプレイ済み！明日また来てください。',
-    'diff.easy':'かんたん','diff.hard':'むずかしい',
   },
 };
 
@@ -994,8 +979,7 @@ function renderGame() {
   // Date display
   const dateObj = new Date();
   const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-  const localeMap = {en:'en-US',es:'es-ES',fr:'fr-FR',de:'de-DE',it:'it-IT',pt:'pt-BR',zh:'zh-CN',hi:'hi-IN',ja:'ja-JP'};
-  document.getElementById('puzzle-date').textContent = dateObj.toLocaleDateString(localeMap[lang] || 'en-US', opts);
+  document.getElementById('puzzle-date').textContent = dateObj.toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-US', opts);
 
   // Difficulty buttons
   document.getElementById('diff-easy').className = 'diff-btn' + (difficulty === 'easy' ? ' active-easy' : '');
@@ -1188,7 +1172,6 @@ function clearExpr() {
   document.getElementById('expr-result').style.display = 'none';
   document.getElementById('btn-check').disabled = true;
   document.getElementById('current-val-display').classList.remove('show');
-  document.getElementById('current-val-text').textContent = '—';
 }
 
 function autoWin() {
