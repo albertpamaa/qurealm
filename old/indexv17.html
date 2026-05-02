@@ -1303,6 +1303,7 @@ function autoFail() {
   attemptNum++;
   addHistoryItem(attemptNum, exprText, val, false);
   renderAttemptsDots();
+  saveDiffState();
   if (attemptNum >= MAX_ATTEMPTS) {
     const stats = loadStats();
     stats.played++;
@@ -1310,12 +1311,10 @@ function autoFail() {
     saveStats(stats);
     updateStatDisplay(stats);
     gameOver = true;
-    saveDiffState();
     doReset();
     showResult(false, attemptNum);
     return;
   }
-  saveDiffState();
   showToast('✗ ' + val + ' ≠ ' + puzzle.target + ' — attempt ' + attemptNum + '/' + MAX_ATTEMPTS);
   doReset();
 }
@@ -1422,7 +1421,7 @@ function showResult(win, attempts) {
   title.className = 'result-title ' + (win ? 'win' : 'lose');
 
   if (win) {
-    title.textContent = attempts === 1 ? t('result.win.first') : t('result.win.attempts') + ' ' + attempts + '/5';
+    title.textContent = attempts === 1 ? t('result.win.first') : t('result.win.attempts') + ' ' + attempts + '/10';
   } else {
     title.textContent = t('result.out');
   }
@@ -1435,7 +1434,7 @@ function showResult(win, attempts) {
     solEl.textContent = puzzle.solution;
   }
   startNextTimer();
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 150);
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function showAlreadyPlayed(won) {
