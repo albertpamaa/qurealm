@@ -172,34 +172,6 @@
     .confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:fall 1.2s ease-in forwards;}
     @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-    /* ATTEMPTS */
-    .attempts-bar{padding:0 1.5rem 1rem;}
-    .attempts-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;}
-    .attempts-dots{display:flex;gap:6px;}
-    .attempt-dot{width:24px;height:24px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:all .3s;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
-    .attempt-dot.used{border-color:var(--red);background:rgba(240,90,90,.15);color:var(--red);}
-    .attempt-dot.won{border-color:var(--green);background:rgba(61,214,140,.15);color:var(--green);}
-    .attempt-dot.current{border-color:var(--accent);background:rgba(232,197,71,.1);animation:pulse-dot .8s ease-in-out infinite;}
-    @keyframes pulse-dot{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
-
-    /* HISTORY */
-    .history-section{padding:0 1.5rem 1rem;}
-    .history-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;}
-    .history-list{display:flex;flex-direction:column;gap:6px;}
-    .history-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:var(--radius);font-size:13px;border:1px solid var(--border);}
-    .history-num{font-size:11px;color:var(--hint);width:20px;flex-shrink:0;}
-    .history-expr{font-family:'Space Mono',monospace;flex:1;color:var(--muted);}
-    .history-result{font-family:'Space Mono',monospace;font-weight:700;font-size:13px;}
-    .history-result.close{color:var(--accent);}
-    .history-result.far{color:var(--red);}
-
-    /* CURRENT VAL DISPLAY */
-    .current-val-display{background:rgba(232,197,71,.08);border:1px solid rgba(232,197,71,.2);border-radius:var(--radius);padding:8px 14px;margin:0 1.5rem 1rem;text-align:center;display:none;}
-    .current-val-display.show{display:block;}
-    .cvd-label{font-size:11px;color:var(--muted);margin-bottom:2px;}
-    .cvd-val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:var(--accent);}
-
-    /* MOBILE NAV */
     /* MOBILE NAV */
     .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(22,22,31,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:8px 0 20px;z-index:50;}
     .mobile-nav-inner{display:flex;justify-content:space-around;}
@@ -267,21 +239,6 @@
       <div class="numbers-grid" id="numbers-grid"></div>
     </div>
 
-    <!-- ATTEMPTS BAR -->
-    <div class="attempts-bar">
-      <div class="attempts-label">
-        <span data-i18n="game.attempts">Attempts</span>
-        <span id="attempts-counter">0/10</span>
-      </div>
-      <div class="attempts-dots" id="attempts-dots"></div>
-    </div>
-
-    <!-- CURRENT RUNNING VALUE -->
-    <div class="current-val-display" id="current-val-display">
-      <div class="cvd-label" data-i18n="game.running">Running total</div>
-      <div class="cvd-val" id="current-val-text">—</div>
-    </div>
-
     <div class="operators-section">
       <div class="operators-grid">
         <button class="op-btn" onclick="selectOp('+')">+</button>
@@ -304,12 +261,6 @@
         <button class="btn-secondary" onclick="clearExpr()" data-i18n="game.clear">Clear</button>
         <button class="btn-secondary" onclick="showHint()" data-i18n="game.hint">💡 Hint</button>
       </div>
-    </div>
-
-    <!-- HISTORY -->
-    <div class="history-section" id="history-section" style="display:none">
-      <div class="history-title" data-i18n="game.history">Previous attempts</div>
-      <div class="history-list" id="history-list"></div>
     </div>
 
     <div class="result-panel" id="result-panel">
@@ -481,12 +432,6 @@ const T = {
     'hint.msg': 'Try to make ',
     'copied': 'Copied!',
     'already.played': 'You already played today! Come back tomorrow.',
-    'game.attempts': 'Attempts',
-    'game.running': 'Running total',
-    'game.history': 'Previous attempts',
-    'result.win.attempts': 'Solved in attempt',
-    'result.win.first': 'Solved in the first attempt!',
-    'result.out': 'No more attempts',
   },
   es: {
     'nav.how': 'Cómo jugar',
@@ -542,12 +487,6 @@ const T = {
     'hint.msg': 'Intenta hacer ',
     'copied': '¡Copiado!',
     'already.played': '¡Ya jugaste hoy! Vuelve mañana.',
-    'game.attempts': 'Intentos',
-    'game.running': 'Valor actual',
-    'game.history': 'Intentos anteriores',
-    'result.win.attempts': 'Resuelto en el intento',
-    'result.win.first': '¡Resuelto en el primer intento!',
-    'result.out': 'Sin más intentos',
   },
   fr: {
     'nav.how':'Comment jouer','nav.about':'À propos','nav.contact':'Contact','nav.game':'Jeu',
@@ -960,9 +899,6 @@ let usedIndices = [];
 let expression = [];
 let gameOver = false;
 let todayStr = '';
-const MAX_ATTEMPTS = 10;
-let attemptNum = 0;
-let attemptHistory = [];
 
 function getTodayStr() {
   const d = new Date();
@@ -1002,14 +938,6 @@ function renderGame() {
   document.getElementById('stat-streak').textContent = stats.streak;
   if (stats.streak > 0) document.getElementById('streak-display').textContent = `🔥 ${stats.streak}`;
 
-  // Init attempts
-  attemptNum = 0;
-  attemptHistory = [];
-  renderAttemptsDots();
-  document.getElementById('history-section').style.display = 'none';
-  document.getElementById('history-list').innerHTML = '';
-  document.getElementById('current-val-display').classList.remove('show');
-
   // Check if already played today
   if (stats.lastPlayed === todayStr) {
     gameOver = true;
@@ -1019,29 +947,6 @@ function renderGame() {
   // Clear expression
   clearExpr();
   applyTranslations();
-}
-
-function renderAttemptsDots() {
-  const container = document.getElementById('attempts-dots');
-  const counter = document.getElementById('attempts-counter');
-  container.innerHTML = '';
-  for (let i = 0; i < MAX_ATTEMPTS; i++) {
-    const dot = document.createElement('div');
-    dot.className = 'attempt-dot';
-    if (i < attemptHistory.length) {
-      const h = attemptHistory[i];
-      dot.className = 'attempt-dot ' + (h.correct ? 'won' : 'used');
-      dot.textContent = h.correct ? '✓' : '✗';
-    } else if (i === attemptNum && !gameOver) {
-      dot.className = 'attempt-dot current';
-      dot.textContent = i + 1;
-    } else {
-      dot.textContent = i + 1;
-      dot.style.opacity = '.3';
-    }
-    container.appendChild(dot);
-  }
-  counter.textContent = attemptNum + '/' + MAX_ATTEMPTS;
 }
 
 // ============================================================
@@ -1097,22 +1002,9 @@ function selectNum(idx) {
     updateExprDisplay();
     document.getElementById('btn-check').disabled = false;
 
-    // Show running total
-    const cvd = document.getElementById('current-val-display');
-    const cvdVal = document.getElementById('current-val-text');
-    const rounded = Math.round(currentVal * 100) / 100;
-    cvdVal.textContent = rounded;
-    cvd.classList.add('show');
-
-    // Highlight if matches target
+    // Auto-check if all numbers used or result matches
     if (Math.abs(currentVal - puzzle.target) < 0.001) {
-      cvd.style.background = 'rgba(61,214,140,.12)';
-      cvd.style.borderColor = 'rgba(61,214,140,.4)';
-      cvdVal.style.color = 'var(--green)';
-    } else {
-      cvd.style.background = '';
-      cvd.style.borderColor = '';
-      cvdVal.style.color = '';
+      document.getElementById('btn-check').classList.add('pulse');
     }
   }
 }
@@ -1162,68 +1054,28 @@ function clearExpr() {
   el.classList.add('empty');
   document.getElementById('expr-result').style.display = 'none';
   document.getElementById('btn-check').disabled = true;
-  document.getElementById('current-val-display').classList.remove('show');
 }
 
 function checkSolution() {
   if (!currentVal || gameOver) return;
   const correct = Math.abs(currentVal - puzzle.target) < 0.001;
-  const exprText = steps[0] || '';
-  const rounded = Math.round(currentVal * 100) / 100;
-
-  // Add to history
-  attemptHistory.push({ correct, expr: exprText, val: rounded });
-  attemptNum++;
-  renderAttemptsDots();
-
-  // Show in history list
-  addHistoryItem(attemptNum, exprText, rounded, correct);
+  const stats = loadStats();
+  stats.played++;
+  stats.lastPlayed = todayStr;
 
   if (correct) {
-    // WON
-    const stats = loadStats();
-    stats.played++;
-    stats.lastPlayed = todayStr;
     stats.won++;
     if (stats.lastWon === getPreviousDayStr()) stats.streak++;
     else if (stats.lastWon !== todayStr) stats.streak = 1;
     stats.lastWon = todayStr;
     saveStats(stats);
-    updateStatDisplay(stats);
-    gameOver = true;
-    showResult(true, attemptNum);
+    showResult(true);
     confetti();
-  } else if (attemptNum >= MAX_ATTEMPTS) {
-    // OUT OF ATTEMPTS
-    const stats = loadStats();
-    stats.played++;
-    stats.lastPlayed = todayStr;
-    saveStats(stats);
-    updateStatDisplay(stats);
-    gameOver = true;
-    showResult(false, attemptNum);
   } else {
-    // FAILED ATTEMPT — reset for next try
-    showToast('❌ ' + rounded + ' ≠ ' + puzzle.target + ' — attempt ' + attemptNum + '/' + MAX_ATTEMPTS);
-    clearExpr();
+    saveStats(stats);
+    showResult(false);
   }
-}
-
-function addHistoryItem(num, expr, val, correct) {
-  const section = document.getElementById('history-section');
-  const list = document.getElementById('history-list');
-  section.style.display = 'block';
-  const diff = Math.abs(val - puzzle.target);
-  const cls = diff <= 5 ? 'close' : 'far';
-  const item = document.createElement('div');
-  item.className = 'history-item';
-  item.innerHTML = \`<span class="history-num">\${num}</span>
-    <span class="history-expr">\${expr} = \${val}</span>
-    <span class="history-result \${correct ? 'close' : cls}">\${correct ? '✓ ' + val : (diff <= 5 ? '~' + val : '✗ ' + val)}</span>\`;
-  list.appendChild(item);
-}
-
-function updateStatDisplay(stats) {
+  gameOver = true;
   document.getElementById('stat-played').textContent = stats.played;
   document.getElementById('stat-won').textContent = stats.won;
   document.getElementById('stat-streak').textContent = stats.streak;
@@ -1235,19 +1087,13 @@ function getPreviousDayStr() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 }
 
-function showResult(win, attempts) {
+function showResult(win) {
   const panel = document.getElementById('result-panel');
   panel.classList.add('show');
   document.getElementById('result-emoji').textContent = win ? '🎉' : '😅';
   const title = document.getElementById('result-title');
+  title.textContent = t(win ? 'result.win' : 'result.lose');
   title.className = 'result-title ' + (win ? 'win' : 'lose');
-
-  if (win) {
-    title.textContent = attempts === 1 ? t('result.win.first') : t('result.win.attempts') + ' ' + attempts + '/10';
-  } else {
-    title.textContent = t('result.out');
-  }
-
   document.getElementById('result-desc').textContent = t(win ? 'result.win.desc' : 'result.lose.desc');
 
   const solEl = document.getElementById('result-solution');
@@ -1299,11 +1145,8 @@ function showHint() {
 function shareResult() {
   const stats = loadStats();
   const won = stats.lastWon === todayStr;
-  const attemptsUsed = attemptHistory.length;
-  const emoji = won ? '✅' : '❌';
-  const attStr = won ? attemptsUsed + '/10' : 'X/10';
-  const dots = attemptHistory.map(h => h.correct ? '🟩' : '🟥').join('');
-  const text = `QuRealm ${todayStr}\nTarget: ${puzzle.target} | ${emoji} ${attStr}\n${dots}\nqurealm.com`;
+  const emoji = won ? '🟩' : '🟥';
+  const text = `QuRealm ${todayStr}\nTarget: ${puzzle.target} | Numbers: ${puzzle.numbers.join(', ')}\n${emoji} qurealm.com`;
   if (navigator.share) {
     navigator.share({ title: 'QuRealm', text });
   } else {
