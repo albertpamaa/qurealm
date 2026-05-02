@@ -371,10 +371,6 @@
         <div class="step-num">4</div>
         <div class="step-text" data-i18n="how.step4">When your expression equals the target, hit <strong>Check solution</strong>!</div>
       </div>
-      <div class="step">
-        <div class="step-num">5</div>
-        <div class="step-text" data-i18n="how.step5">Each attempt starts when you pick your first number. If you <strong>clear</strong> after starting, it counts as a failed attempt.</div>
-      </div>
     </div>
     <div class="example-box">
       <span data-i18n="how.example">Example: target = </span><span>24</span>, <span data-i18n="how.numbers">numbers</span> = <span>3, 4, 6, 2</span><br>
@@ -461,8 +457,6 @@ const T = {
     'footer.tagline': 'A new puzzle every day. Free forever.',
     'nav.privacy': 'Privacy',
     'game.solve': '👁 Solution',
-    'game.cleared': 'Cleared',
-    'how.step5': 'Each attempt starts when you pick your first number. If you <strong>clear</strong> after starting, it counts as a failed attempt.',
     'result.solve.title': "Don't give up so soon! 💪",
     'result.solve.desc': "Keep trying until the end — another day will come.",
     'diff.easy': 'Easy',
@@ -532,8 +526,6 @@ const T = {
     'footer.tagline': 'Un puzzle nuevo cada día. Gratis para siempre.',
     'nav.privacy': 'Privacidad',
     'game.solve': '👁 Solución',
-    'game.cleared': 'Borrado',
-    'how.step5': 'Cada intento empieza cuando eliges el primer número. Si <strong>borras</strong> después de empezar, cuenta como intento fallido.',
     'result.solve.title': '¡Hay que intentarlo hasta el final! 💪',
     'result.solve.desc': 'No te rindas tan pronto — otro día será.',
     'diff.easy': 'Fácil',
@@ -581,7 +573,6 @@ const T = {
     'result.next':'Prochain puzzle dans:','hint.msg':'Essayez de faire ','copied':'Copié!',
     'already.played':'Déjà joué aujourd\'hui! Revenez demain.',
     'diff.easy':'Facile','diff.hard':'Difficile',
-    'game.cleared':'Effacé','how.step5':'Chaque tentative commence avec le premier chiffre. <strong>Effacer</strong> après avoir commencé compte comme un essai raté.',
   },
   de: {
     'nav.how':'Anleitung','nav.about':'Über uns','nav.contact':'Kontakt','nav.game':'Spiel',
@@ -611,7 +602,6 @@ const T = {
     'result.next':'Nächstes Rätsel in:','hint.msg':'Versuche ','copied':'Kopiert!',
     'already.played':'Heute schon gespielt! Morgen wiederkommen.',
     'diff.easy':'Leicht','diff.hard':'Schwer',
-    'game.cleared':'Gelöscht','how.step5':'Jeder Versuch beginnt mit der ersten Zahl. <strong>Löschen</strong> nach dem Start zählt als fehlgeschlagener Versuch.',
   },
   it: {
     'nav.how':'Come giocare','nav.about':'Chi siamo','nav.contact':'Contatti','nav.game':'Gioco',
@@ -641,7 +631,6 @@ const T = {
     'result.next':'Prossimo puzzle tra:','hint.msg':'Prova a fare ','copied':'Copiato!',
     'already.played':'Hai già giocato oggi! Torna domani.',
     'diff.easy':'Facile','diff.hard':'Difficile',
-    'game.cleared':'Cancellato','how.step5':'Ogni tentativo inizia con il primo numero. <strong>Cancellare</strong> dopo aver iniziato conta come tentativo fallito.',
   },
   pt: {
     'nav.how':'Como jogar','nav.about':'Sobre','nav.contact':'Contato','nav.game':'Jogo',
@@ -671,7 +660,6 @@ const T = {
     'result.next':'Próximo puzzle em:','hint.msg':'Tente fazer ','copied':'Copiado!',
     'already.played':'Já jogou hoje! Volte amanhã.',
     'diff.easy':'Fácil','diff.hard':'Difícil',
-    'game.cleared':'Limpo','how.step5':'Cada tentativa começa com o primeiro número. <strong>Limpar</strong> depois de começar conta como falhada.',
   },
   zh: {
     'nav.how':'如何游玩','nav.about':'关于','nav.contact':'联系我们','nav.game':'游戏',
@@ -701,7 +689,6 @@ const T = {
     'result.next':'下一个谜题：','hint.msg':'试试先做 ','copied':'已复制！',
     'already.played':'今天已经玩过了！明天再来。',
     'diff.easy':'简单','diff.hard':'困难',
-    'game.cleared':'已清除','how.step5':'每次尝试从选第一个数字开始。开始后<strong>清除</strong>算作失败尝试。',
   },
   hi: {
     'nav.how':'कैसे खेलें','nav.about':'हमारे बारे में','nav.contact':'संपर्क','nav.game':'खेल',
@@ -731,7 +718,6 @@ const T = {
     'result.next':'अगली पहेली:','hint.msg':'पहले बनाएँ ','copied':'कॉपी हो गया!',
     'already.played':'आज खेल चुके हैं! कल आएँ।',
     'diff.easy':'आसान','diff.hard':'कठिन',
-    'game.cleared':'साफ़','how.step5':'हर प्रयास पहली संख्या से शुरू होता है। शुरू के बाद <strong>साफ़</strong> करना विफल प्रयास है।',
   },
   ja: {
     'nav.how':'遊び方','nav.about':'概要','nav.contact':'お問い合わせ','nav.game':'ゲーム',
@@ -761,7 +747,6 @@ const T = {
     'result.next':'次のパズルまで：','hint.msg':'まず作ってみて ','copied':'コピーしました！',
     'already.played':'今日はプレイ済み！明日また来てください。',
     'diff.easy':'かんたん','diff.hard':'むずかしい',
-    'game.cleared':'クリア','how.step5':'各試行は最初の数字を選んだ時に始まります。開始後の<strong>クリア</strong>は失敗とみなされます。',
   },
 };
 
@@ -1021,7 +1006,6 @@ function renderGame() {
   document.getElementById('diff-hard').className = 'diff-btn' + (difficulty === 'hard' ? ' active-hard' : '');
 
   // Target
-  gameOver = false;
   document.getElementById('target-display').textContent = puzzle.target;
 
   // Numbers
@@ -1052,7 +1036,7 @@ function renderGame() {
   }
 
   // Clear expression
-  doReset();
+  clearExpr();
   applyTranslations();
 }
 
@@ -1194,31 +1178,6 @@ function updateExprDisplay() {
 }
 
 function clearExpr() {
-  // Count as failed attempt only if user already started (picked a number)
-  if (!gameOver && (selectedNum !== null || steps.length > 0)) {
-    const exprText = steps[0] || '—';
-    const val = currentVal !== null ? Math.round(currentVal * 100) / 100 : '—';
-    attemptHistory.push({ correct: false, expr: exprText, val });
-    attemptNum++;
-    addHistoryItem(attemptNum, exprText, val, false);
-    renderAttemptsDots();
-    if (attemptNum >= MAX_ATTEMPTS) {
-      const stats = loadStats();
-      stats.played++;
-      stats.lastPlayed = todayStr;
-      saveStats(stats);
-      updateStatDisplay(stats);
-      gameOver = true;
-      doReset();
-      showResult(false, attemptNum);
-      return;
-    }
-    showToast('❌ ' + t('game.cleared') + ' — ' + attemptNum + '/' + MAX_ATTEMPTS);
-  }
-  doReset();
-}
-
-function doReset() {
   usedIndices = [];
   selectedNum = null;
   selectedOp = null;
@@ -1255,7 +1214,7 @@ function autoWin() {
 
 function autoFail() {
   showToast('✗ ' + currentVal + ' ≠ ' + puzzle.target + ' — try again!');
-  doReset();
+  clearExpr();
 }
 
 function showSolution() {
@@ -1322,7 +1281,7 @@ function checkSolution() {
   } else {
     // FAILED ATTEMPT — reset for next try
     showToast('❌ ' + rounded + ' ≠ ' + puzzle.target + ' — attempt ' + attemptNum + '/' + MAX_ATTEMPTS);
-    doReset();
+    clearExpr();
   }
 }
 
