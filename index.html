@@ -783,12 +783,38 @@ const LANG_META = {
   ja: {flag:'🇯🇵', label:'JA'},
 };
 
+function saveDiffState() {
+  // Save current in-progress state for this difficulty
+  const state = {
+    attemptNum, attemptHistory,
+    usedIndices: [...usedIndices],
+    steps: [...steps],
+    selectedNum, selectedOp,
+    currentVal, currentNums: [...currentNums],
+    gameOver,
+    historyHTML: document.getElementById('history-list').innerHTML,
+    historyVisible: document.getElementById('history-section').style.display,
+    resultVisible: document.getElementById('result-panel').classList.contains('show'),
+  };
+  localStorage.setItem('qurealm_state_' + difficulty, JSON.stringify(state));
+}
+
+function loadDiffState(d) {
+  try {
+    const raw = localStorage.getItem('qurealm_state_' + d);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+
 function setDifficulty(d) {
+  if (d === difficulty) return;
+  // Save current state before switching
+  saveDiffState();
   difficulty = d;
   localStorage.setItem('qurealm_diff', d);
   document.getElementById('diff-easy').className = 'diff-btn' + (d === 'easy' ? ' active-easy' : '');
   document.getElementById('diff-hard').className = 'diff-btn' + (d === 'hard' ? ' active-hard' : '');
-  if (!gameOver) renderGame();
+  renderGame();
 }
 
 function toggleLangDropdown() {
@@ -1044,21 +1070,54 @@ function renderGame() {
   document.getElementById('stat-streak').textContent = stats.streak;
   if (stats.streak > 0) document.getElementById('streak-display').textContent = `🔥 ${stats.streak}`;
 
-  // Init attempts
-  attemptNum = 0;
-  attemptHistory = [];
-  renderAttemptsDots();
-  document.getElementById('history-section').style.display = 'none';
-  document.getElementById('history-list').innerHTML = '';
-
-  // Check if already played today
-  if (stats.lastPlayed === todayStr) {
-    gameOver = true;
-    showAlreadyPlayed(stats.lastWon === todayStr);
+  // Try to restore saved state for this difficulty
+  const savedState = loadDiffState(difficulty);
+  const today = getTodayStr();
+  if (savedState && savedState.attemptNum !== undefined) {
+    // Restore in-progress state
+    attemptNum = savedState.attemptNum;
+    attemptHistory = savedState.attemptHistory || [];
+    usedIndices = savedState.usedIndices || [];
+    steps = savedState.steps || [];
+    selectedNum = savedState.selectedNum;
+    selectedOp = savedState.selectedOp;
+    currentVal = savedState.currentVal;
+    currentNums = savedState.currentNums || [];
+    gameOver = savedState.gameOver || false;
+    document.getElementById('history-list').innerHTML = savedState.historyHTML || '';
+    document.getElementById('history-section').style.display = savedState.historyVisible || 'none';
+    renderAttemptsDots();
+    // Restore number button states
+    usedIndices.forEach(i => {
+      const btn = document.getElementById('num-' + i);
+      if (btn) btn.classList.add('used');
+    });
+    if (selectedNum !== null) {
+      const btn = document.getElementById('num-' + selectedNum);
+      if (btn) btn.classList.add('selected');
+    }
+    updateExprDisplay();
+    // Restore result panel if game was over
+    if (savedState.resultVisible) {
+      // Already played - just show alreadyPlayed panel
+      if (stats.lastPlayed === today) {
+        showAlreadyPlayed(stats.lastWon === today);
+      }
+    }
+  } else {
+    // Fresh start for this difficulty
+    attemptNum = 0;
+    attemptHistory = [];
+    renderAttemptsDots();
+    document.getElementById('history-section').style.display = 'none';
+    document.getElementById('history-list').innerHTML = '';
+    // Check if already played today
+    if (stats.lastPlayed === today) {
+      gameOver = true;
+      showAlreadyPlayed(stats.lastWon === today);
+    }
+    doReset();
   }
-
-  // Clear expression
-  doReset();
   applyTranslations();
 }
 
@@ -1183,6 +1242,7 @@ function clearExpr() {
     attemptNum++;
     addHistoryItem(attemptNum, exprText, val, false);
     renderAttemptsDots();
+    saveDiffState();
     if (attemptNum >= MAX_ATTEMPTS) {
       const stats = loadStats();
       stats.played++;
@@ -1238,6 +1298,7 @@ function autoFail() {
   attemptNum++;
   addHistoryItem(attemptNum, exprText, val, false);
   renderAttemptsDots();
+  saveDiffState();
   if (attemptNum >= MAX_ATTEMPTS) {
     const stats = loadStats();
     stats.played++;
