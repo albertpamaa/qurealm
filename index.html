@@ -1217,9 +1217,7 @@ function addHistoryItem(num, expr, val, correct) {
   const cls = diff <= 5 ? 'close' : 'far';
   const item = document.createElement('div');
   item.className = 'history-item';
-  item.innerHTML = \`<span class="history-num">\${num}</span>
-    <span class="history-expr">\${expr} = \${val}</span>
-    <span class="history-result \${correct ? 'close' : cls}">\${correct ? '✓ ' + val : (diff <= 5 ? '~' + val : '✗ ' + val)}</span>\`;
+  item.innerHTML = '<span class="history-num">' + num + '</span><span class="history-expr"> ' + expr + ' = ' + val + '</span><span class="history-result ' + (correct ? 'close' : cls) + '">' + (correct ? '✓ ' + val : (diff <= 5 ? '~' + val : '✗ ' + val)) + '</span>';
   list.appendChild(item);
 }
 
