@@ -172,13 +172,6 @@
     .confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:fall 1.2s ease-in forwards;}
     @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-    /* DIFFICULTY */
-    .diff-selector{display:flex;gap:8px;padding:0 1.5rem 1rem;}
-    .diff-btn{flex:1;padding:8px;border-radius:var(--radius);border:1.5px solid var(--border);background:transparent;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--muted);}
-    .diff-btn:hover{border-color:var(--muted);color:var(--text);}
-    .diff-btn.active.easy{border-color:var(--green);color:var(--green);background:rgba(61,214,140,.08);}
-    .diff-btn.active.hard{border-color:var(--red);color:var(--red);background:rgba(240,90,90,.08);}
-
     /* ATTEMPTS */
     .attempts-bar{padding:0 1.5rem 1rem;}
     .attempts-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between;}
@@ -262,12 +255,6 @@
     <div class="puzzle-header">
       <span class="puzzle-date" id="puzzle-date">—</span>
       <span class="puzzle-streak" id="streak-display"></span>
-    </div>
-
-    <!-- DIFFICULTY -->
-    <div class="diff-selector">
-      <button class="diff-btn easy active" id="diff-easy" onclick="setDifficulty('easy')">🟢 Easy</button>
-      <button class="diff-btn hard" id="diff-hard" onclick="setDifficulty('hard')">🔴 Hard</button>
     </div>
 
     <div class="target-section">
@@ -412,7 +399,7 @@
     <p data-i18n="contact.p1">Found a bug? Have a suggestion? Want to collaborate? We'd love to hear from you.</p>
     <p data-i18n="contact.p2">We try to respond within 48 hours.</p>
     <div class="email-display" onclick="copyEmail()" id="email-display">
-      📬 qrealmcontact@gmail.com <span style="font-size:11px;color:var(--muted);margin-left:8px;" data-i18n="contact.copy">copy</span>
+      📬 contact@qurealm.com <span style="font-size:11px;color:var(--muted);margin-left:8px;" data-i18n="contact.copy">copy</span>
     </div>
     <p style="margin-top:1rem" data-i18n="contact.p3">We welcome feedback on puzzle difficulty, new language requests, and accessibility improvements.</p>
   </div>
@@ -853,10 +840,7 @@ function generatePuzzle(dateStr) {
 
   // Find all possible results
   const results = getAllResults(nums);
-  // Easy: 2-digit targets, Hard: can require 3+ operations
-  const validTargets = difficulty === 'hard'
-    ? [...results].filter(r => r >= 50 && r <= 200 && Number.isInteger(r))
-    : [...results].filter(r => r >= 10 && r <= 50 && Number.isInteger(r));
+  const validTargets = [...results].filter(r => r >= 10 && r <= 99 && Number.isInteger(r));
 
   if (validTargets.length === 0) {
     // Fallback
@@ -972,7 +956,6 @@ function findSolution(nums, target) {
 // GAME STATE
 // ============================================================
 let puzzle = null;
-let difficulty = localStorage.getItem('qurealm_diff') || 'easy';
 let usedIndices = [];
 let expression = [];
 let gameOver = false;
@@ -980,16 +963,6 @@ let todayStr = '';
 const MAX_ATTEMPTS = 10;
 let attemptNum = 0;
 let attemptHistory = [];
-
-function setDifficulty(d) {
-  difficulty = d;
-  localStorage.setItem('qurealm_diff', d);
-  document.getElementById('diff-easy').classList.toggle('active', d === 'easy');
-  document.getElementById('diff-easy').classList.toggle('easy', d === 'easy');
-  document.getElementById('diff-hard').classList.toggle('active', d === 'hard');
-  document.getElementById('diff-hard').classList.toggle('hard', d === 'hard');
-  if (!gameOver) renderGame();
-}
 
 function getTodayStr() {
   const d = new Date();
@@ -1028,12 +1001,6 @@ function renderGame() {
   document.getElementById('stat-won').textContent = stats.won;
   document.getElementById('stat-streak').textContent = stats.streak;
   if (stats.streak > 0) document.getElementById('streak-display').textContent = `🔥 ${stats.streak}`;
-
-  // Init difficulty buttons
-  document.getElementById('diff-easy').classList.toggle('active', difficulty === 'easy');
-  document.getElementById('diff-easy').classList.toggle('easy', difficulty === 'easy');
-  document.getElementById('diff-hard').classList.toggle('active', difficulty === 'hard');
-  document.getElementById('diff-hard').classList.toggle('hard', difficulty === 'hard');
 
   // Init attempts
   attemptNum = 0;
@@ -1199,7 +1166,7 @@ function clearExpr() {
 }
 
 function checkSolution() {
-  if (currentVal === null || currentVal === undefined || gameOver) return;
+  if (!currentVal || gameOver) return;
   const correct = Math.abs(currentVal - puzzle.target) < 0.001;
   const exprText = steps[0] || '';
   const rounded = Math.round(currentVal * 100) / 100;
@@ -1287,7 +1254,7 @@ function showResult(win, attempts) {
     solEl.textContent = puzzle.solution;
   }
   startNextTimer();
-  setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 function showAlreadyPlayed(won) {
@@ -1350,7 +1317,7 @@ function showToast(msg) {
 }
 
 function copyEmail() {
-  navigator.clipboard.writeText('qrealmcontact@gmail.com').then(() => {
+  navigator.clipboard.writeText('contact@qurealm.com').then(() => {
     showToast(t('copied'));
     document.getElementById('email-display').querySelector('span').textContent = '✓';
     setTimeout(() => document.getElementById('email-display').querySelector('span').textContent = t('contact.copy'), 2000);
