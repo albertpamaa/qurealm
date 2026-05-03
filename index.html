@@ -66,7 +66,6 @@
 
     /* MAIN */
     main{position:relative;z-index:1;max-width:580px;margin:0 auto;padding:2rem 1.5rem 6rem;}
-    @media(max-width:600px){main{padding-bottom:100px;}}
 
     /* HERO */
     .hero{text-align:center;padding:2.5rem 0 2rem;}
@@ -201,12 +200,6 @@
 
     /* MOBILE NAV */
     /* MOBILE NAV */
-    .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(22,22,31,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:8px 0 20px;z-index:50;}
-    .mobile-nav-inner{display:flex;justify-content:space-around;}
-    .mob-nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--muted);background:none;border:none;cursor:pointer;padding:6px 12px;font-family:'Space Grotesk',sans-serif;transition:color .15s;}
-    .mob-nav-btn.active{color:var(--accent);}
-    .mob-nav-icon{font-size:20px;}
-    @media(max-width:600px){.mobile-nav{display:block;}}
   </style>
 </head>
 <body>
@@ -390,13 +383,6 @@
   <p style="margin-top:6px" data-i18n="footer.tagline">A new puzzle every day. Free forever.</p>
 </footer>
 
-<div class="mobile-nav">
-  <div class="mobile-nav-inner">
-    <button class="mob-nav-btn active" onclick="scrollTo('#game')"><span class="mob-nav-icon">🧮</span><span data-i18n="nav.game">Game</span></button>
-    <button class="mob-nav-btn" onclick="scrollTo('#how')"><span class="mob-nav-icon">📖</span><span data-i18n="nav.how">How to play</span></button>
-    <button class="mob-nav-btn" onclick="window.location.href='/about.html'"><span class="mob-nav-icon">🌍</span><span data-i18n="nav.about">About</span></button>
-    <button class="mob-nav-btn" onclick="window.location.href='/contact.html'"><span class="mob-nav-icon">✉️</span><span data-i18n="nav.contact">Contact</span></button>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -923,31 +909,28 @@ function dateToSeed(date) {
 
 function generatePuzzle(dateStr) {
   const seed = dateToSeed(dateStr);
-  const rng = seededRandom(seed + (difficulty === 'hard' ? 999 : 0));
+  const baseSeed = seed + (difficulty === 'hard' ? 9999 : 0);
+  const minTarget = difficulty === 'hard' ? 100 : 10;
+  const maxTarget = difficulty === 'hard' ? 200 : 50;
 
-  // Generate numbers 1-9
-  const nums = [];
-  for (let i = 0; i < 4; i++) {
-    nums.push(Math.floor(rng() * 9) + 1);
+  // Try up to 50 different seeds until we find valid numbers
+  for (let attempt = 0; attempt < 50; attempt++) {
+    const rng = seededRandom(baseSeed + attempt * 137);
+    const nums = [];
+    for (let i = 0; i < 4; i++) {
+      nums.push(Math.floor(rng() * 9) + 1);
+    }
+    const results = getAllResults(nums);
+    const validTargets = [...results].filter(r => r >= minTarget && r <= maxTarget && Number.isInteger(r));
+    if (validTargets.length > 0) {
+      const idx = Math.floor(rng() * validTargets.length);
+      const target = validTargets[idx];
+      const solution = findSolution(nums, target);
+      return { numbers: nums, target, solution };
+    }
   }
-
-  // Find all possible results
-  const results = getAllResults(nums);
-  const validTargets = difficulty === 'hard'
-    ? [...results].filter(r => r >= 50 && r <= 200 && Number.isInteger(r))
-    : [...results].filter(r => r >= 10 && r <= 50 && Number.isInteger(r));
-
-  if (validTargets.length === 0) {
-    // Fallback
-    return { numbers: [3, 4, 6, 2], target: 24, solution: '6 × 4 = 24' };
-  }
-
-  // Pick a target using seeded random
-  const idx = Math.floor(rng() * validTargets.length);
-  const target = validTargets[idx];
-  const solution = findSolution(nums, target);
-
-  return { numbers: nums, target, solution };
+  // Should never reach here, but just in case
+  return { numbers: [3, 4, 6, 2], target: 24, solution: '6 × 4 = 24' };
 }
 
 function getAllResults(nums) {
