@@ -88,9 +88,8 @@
     /* NUMBERS */
     .numbers-section{padding:0 1.5rem 1.5rem;}
     .numbers-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:.75rem;text-align:center;}
-    .numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
-    .numbers-grid.hard-grid{grid-template-columns:repeat(4,1fr);}
-    .num-btn{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;padding:14px 8px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;position:relative;}
+    .numbers-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+    .num-btn{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;padding:18px 8px;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);cursor:pointer;transition:all .15s;position:relative;}
     .num-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent);background:rgba(232,197,71,.05);}
     .num-btn.selected{border-color:var(--accent);background:rgba(232,197,71,.12);color:var(--accent);}
     .num-btn.used{opacity:.25;cursor:not-allowed;}
@@ -911,18 +910,18 @@ function dateToSeed(date) {
 function generatePuzzle(dateStr) {
   const seed = dateToSeed(dateStr);
   const baseSeed = seed + (difficulty === 'hard' ? 9999 : 0);
+  const minTarget = difficulty === 'hard' ? 100 : 10;
+  const maxTarget = difficulty === 'hard' ? 200 : 50;
 
-  if (difficulty === 'hard') {
-    return generateHardPuzzle(baseSeed);
-  }
-
-  // EASY: 4 numbers 1-9, target 10-50
+  // Try up to 50 different seeds until we find valid numbers
   for (let attempt = 0; attempt < 50; attempt++) {
     const rng = seededRandom(baseSeed + attempt * 137);
     const nums = [];
-    for (let i = 0; i < 4; i++) nums.push(Math.floor(rng() * 9) + 1);
+    for (let i = 0; i < 4; i++) {
+      nums.push(Math.floor(rng() * 9) + 1);
+    }
     const results = getAllResults(nums);
-    const validTargets = [...results].filter(r => r >= 10 && r <= 50 && Number.isInteger(r));
+    const validTargets = [...results].filter(r => r >= minTarget && r <= maxTarget && Number.isInteger(r));
     if (validTargets.length > 0) {
       const idx = Math.floor(rng() * validTargets.length);
       const target = validTargets[idx];
@@ -930,69 +929,8 @@ function generatePuzzle(dateStr) {
       return { numbers: nums, target, solution };
     }
   }
+  // Should never reach here, but just in case
   return { numbers: [3, 4, 6, 2], target: 24, solution: '6 × 4 = 24' };
-}
-
-function generateHardPuzzle(baseSeed) {
-  // Hard: 8 numbers 1-15, target 150-500
-  // Build puzzle by constructing a guaranteed solution, then adding extra numbers
-  for (let attempt = 0; attempt < 50; attempt++) {
-    const rng = seededRandom(baseSeed + attempt * 137);
-
-    // Generate 8 random numbers 1-15
-    const nums = [];
-    for (let i = 0; i < 8; i++) nums.push(Math.floor(rng() * 15) + 1);
-
-    // Find a target reachable using ANY subset of the 8 numbers
-    // Try combinations of 3-5 numbers to find a target in range
-    const ops = ['+', '-', '*', '/'];
-    const targets = new Set();
-    const solutionMap = {};
-
-    // Try all pairs and triples for speed
-    for (let i = 0; i < 8; i++) {
-      for (let j = 0; j < 8; j++) {
-        if (i === j) continue;
-        for (const op1 of ops) {
-          let v1;
-          if (op1 === '+') v1 = nums[i] + nums[j];
-          else if (op1 === '-') v1 = nums[i] - nums[j];
-          else if (op1 === '*') v1 = nums[i] * nums[j];
-          else if (op1 === '/' && nums[j] !== 0 && nums[i] % nums[j] === 0) v1 = nums[i] / nums[j];
-          else continue;
-          if (v1 >= 150 && v1 <= 500 && !targets.has(v1)) {
-            targets.add(v1);
-            solutionMap[v1] = `${nums[i]} ${op1 === '*' ? '×' : op1 === '/' ? '÷' : op1} ${nums[j]} = ${v1}`;
-          }
-          // Now try adding a 3rd number
-          for (let k = 0; k < 8; k++) {
-            if (k === i || k === j) continue;
-            for (const op2 of ops) {
-              let v2;
-              if (op2 === '+') v2 = v1 + nums[k];
-              else if (op2 === '-') v2 = v1 - nums[k];
-              else if (op2 === '*') v2 = v1 * nums[k];
-              else if (op2 === '/' && nums[k] !== 0 && v1 % nums[k] === 0) v2 = v1 / nums[k];
-              else continue;
-              if (v2 >= 150 && v2 <= 500 && !targets.has(v2)) {
-                targets.add(v2);
-                solutionMap[v2] = `(${solutionMap[v1].split(' = ')[0]}) ${op2 === '*' ? '×' : op2 === '/' ? '÷' : op2} ${nums[k]} = ${v2}`;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    const validTargets = [...targets];
-    if (validTargets.length > 0) {
-      const idx = Math.floor(rng() * validTargets.length);
-      const target = validTargets[idx];
-      return { numbers: nums, target, solution: solutionMap[target] };
-    }
-  }
-  // Fallback
-  return { numbers: [12, 8, 5, 3, 7, 2, 9, 4], target: 200, solution: '(12 + 8) × (5 + 5) = 200' };
 }
 
 function getAllResults(nums) {
@@ -1140,7 +1078,6 @@ function renderGame() {
 
   // Numbers
   const grid = document.getElementById('numbers-grid');
-  grid.className = 'numbers-grid' + (difficulty === 'hard' ? ' hard-grid' : '');
   grid.innerHTML = puzzle.numbers.map((n, i) =>
     `<button class="num-btn" id="num-${i}" onclick="selectNum(${i})">${n}</button>`
   ).join('');
