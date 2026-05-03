@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google Analytics — only loaded after cookie consent -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6GZQMP2XTE"></script>
   <script>
-    function loadGA() {
-      if (document.getElementById('ga-script')) return;
-      var s = document.createElement('script');
-      s.id = 'ga-script';
-      s.async = true;
-      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-6GZQMP2XTE';
-      document.head.appendChild(s);
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      window.gtag = gtag;
-      gtag('js', new Date());
-      gtag('config', 'G-6GZQMP2XTE');
-    }
-    if (localStorage.getItem('qurealm_cookies') === 'accepted') loadGA();
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6GZQMP2XTE');
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -199,16 +190,6 @@
     .confetti-wrap{position:fixed;inset:0;pointer-events:none;z-index:200;}
     .confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:fall 1.2s ease-in forwards;}
     @keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
-
-    /* COOKIE BANNER */
-    #cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--surface);border-top:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 -4px 24px rgba(0,0,0,.4);}
-    #cookie-banner p{font-size:13px;color:var(--muted);line-height:1.5;flex:1;min-width:200px;}
-    #cookie-banner a{color:var(--accent);text-decoration:underline;}
-    .cookie-btns{display:flex;gap:8px;flex-shrink:0;}
-    .cookie-accept{padding:9px 20px;background:var(--accent);color:#0d0d14;border:none;border-radius:20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s;}
-    .cookie-accept:hover{opacity:.85;}
-    .cookie-reject{padding:9px 20px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:20px;font-family:'Space Grotesk',sans-serif;font-size:13px;cursor:pointer;transition:all .15s;}
-    .cookie-reject:hover{border-color:var(--muted);color:var(--text);}
 
     /* ATTEMPTS */
     .attempts-bar{padding:0 1.5rem 1rem;}
@@ -414,7 +395,6 @@
     <a href="/about.html" data-i18n="nav.about" style="color:var(--hint);text-decoration:none;margin:0 8px">About</a>
     <a href="/contact.html" data-i18n="nav.contact" style="color:var(--hint);text-decoration:none;margin:0 8px">Contact</a>
     <a href="/privacy.html" data-i18n="nav.privacy" style="color:var(--hint);text-decoration:none;margin:0 8px">Privacy</a>
-    <a href="/cookies.html" data-i18n="nav.cookies" style="color:var(--hint);text-decoration:none;margin:0 8px">Cookies</a>
   </p>
   <p style="margin-top:6px" data-i18n="footer.tagline">A new puzzle every day. Free forever.</p>
 </footer>
@@ -499,7 +479,8 @@ const T = {
     'result.win.attempts': 'Solved in attempt',
     'result.win.first': 'Solved in the first attempt!',
     'result.out': 'No more attempts',
-    'nav.cookies': 'Cookies',
+  },
+  es: {
     'nav.how': 'Cómo jugar',
     'nav.about': 'Acerca de',
     'nav.contact': 'Contacto',
@@ -570,7 +551,6 @@ const T = {
     'result.win.attempts': 'Resuelto en el intento',
     'result.win.first': '¡Resuelto en el primer intento!',
     'result.out': 'Sin más intentos',
-    'nav.cookies': 'Cookies',
   },
   fr: {
     'nav.how':'Comment jouer','nav.about':'À propos','nav.contact':'Contact','nav.game':'Jeu',
@@ -605,7 +585,7 @@ const T = {
     'game.solve':'👁 Solution',
     'game.attempts':'Tentatives',
     'game.history':'Tentatives précédentes',
-    'result.out':'Sans plus d\'essais','result.win.first':'🎉 Premier essai !','result.win.attempts':'Résolu en','nav.cookies':'Cookies',
+    'result.out':'Sans plus d\'essais','result.win.first':'🎉 Premier essai !','result.win.attempts':'Résolu en',
   },
   de: {
     'nav.how':'Anleitung','nav.about':'Über uns','nav.contact':'Kontakt','nav.game':'Spiel',
@@ -640,7 +620,7 @@ const T = {
     'game.solve':'👁 Lösung',
     'game.attempts':'Versuche',
     'game.history':'Vorherige Versuche',
-    'result.out':'Keine Versuche mehr','result.win.first':'🎉 Erster Versuch!','result.win.attempts':'Gelöst in Versuch','nav.cookies':'Cookies',
+    'result.out':'Keine Versuche mehr','result.win.first':'🎉 Erster Versuch!','result.win.attempts':'Gelöst in Versuch',
   },
   it: {
     'nav.how':'Come giocare','nav.about':'Chi siamo','nav.contact':'Contatti','nav.game':'Gioco',
@@ -745,7 +725,7 @@ const T = {
     'game.solve':'👁 查看答案',
     'game.attempts':'尝试',
     'game.history':'历史记录',
-    'result.out':'没有更多尝试','result.win.first':'🎉 第一次就解决了！','result.win.attempts':'第','nav.cookies':'Cookies',
+    'result.out':'没有更多尝试','result.win.first':'🎉 第一次就解决了！','result.win.attempts':'第',
   },
   hi: {
     'nav.how':'कैसे खेलें','nav.about':'हमारे बारे में','nav.contact':'संपर्क','nav.game':'खेल',
@@ -780,7 +760,7 @@ const T = {
     'game.solve':'👁 हल देखें',
     'game.attempts':'प्रयास',
     'game.history':'पिछले प्रयास',
-    'result.out':'और प्रयास नहीं','result.win.first':'🎉 पहले प्रयास में!','result.win.attempts':'प्रयास में हल','nav.cookies':'Cookies',
+    'result.out':'और प्रयास नहीं','result.win.first':'🎉 पहले प्रयास में!','result.win.attempts':'प्रयास में हल',
   },
   ja: {
     'nav.how':'遊び方','nav.about':'概要','nav.contact':'お問い合わせ','nav.game':'ゲーム',
@@ -815,7 +795,7 @@ const T = {
     'game.solve':'👁 答えを見る',
     'game.attempts':'試行',
     'game.history':'前回の試行',
-    'result.out':'これ以上試行なし','result.win.first':'🎉 一発で解けた！','result.win.attempts':'試行で解けた','nav.cookies':'クッキー',
+    'result.out':'これ以上試行なし','result.win.first':'🎉 一発で解けた！','result.win.attempts':'試行で解けた',
   },
 };
 
@@ -1620,41 +1600,6 @@ function confetti() {
 }
 
 // ============================================================
-// COOKIE BANNER
-// ============================================================
-const COOKIE_TEXTS = {
-  en: { msg: 'We use Google Analytics to understand how people use QuRealm. No personal data, no ads. Accept to help us improve the game.', accept: 'Accept', reject: 'Reject', link: 'Cookie policy' },
-  es: { msg: 'Usamos Google Analytics para entender cómo se usa QuRealm. Sin datos personales, sin publicidad. Acepta para ayudarnos a mejorar el juego.', accept: 'Aceptar', reject: 'Rechazar', link: 'Política de cookies' },
-  fr: { msg: 'Nous utilisons Google Analytics pour comprendre comment QuRealm est utilisé. Aucune donnée personnelle, aucune pub. Acceptez pour nous aider à améliorer le jeu.', accept: 'Accepter', reject: 'Refuser', link: 'Politique cookies' },
-  de: { msg: 'Wir nutzen Google Analytics, um zu verstehen, wie QuRealm verwendet wird. Keine persönlichen Daten, keine Werbung. Akzeptieren Sie, um uns zu helfen.', accept: 'Akzeptieren', reject: 'Ablehnen', link: 'Cookie-Richtlinie' },
-  it: { msg: 'Usiamo Google Analytics per capire come viene usato QuRealm. Nessun dato personale, nessuna pubblicità. Accetta per aiutarci a migliorare il gioco.', accept: 'Accetta', reject: 'Rifiuta', link: 'Cookie policy' },
-  pt: { msg: 'Usamos o Google Analytics para entender como o QuRealm é usado. Sem dados pessoais, sem anúncios. Aceite para nos ajudar a melhorar.', accept: 'Aceitar', reject: 'Rejeitar', link: 'Política de cookies' },
-  zh: { msg: '我们使用 Google Analytics 了解 QuRealm 的使用情况。无个人数据，无广告。接受以帮助我们改进游戏。', accept: '接受', reject: '拒绝', link: 'Cookie 政策' },
-  hi: { msg: 'हम QuRealm के उपयोग को समझने के लिए Google Analytics का उपयोग करते हैं। कोई व्यक्तिगत डेटा नहीं, कोई विज्ञापन नहीं।', accept: 'स्वीकार', reject: 'अस्वीकार', link: 'कुकी नीति' },
-  ja: { msg: 'QuRealmの利用状況を把握するためにGoogle Analyticsを使用しています。個人データなし、広告なし。ゲーム改善のためにご協力ください。', accept: '同意する', reject: '拒否', link: 'クッキーポリシー' },
-};
-
-function initCookieBanner() {
-  const consent = localStorage.getItem('qurealm_cookies');
-  if (consent) return; // already decided
-  const l = localStorage.getItem('qurealm_lang') || 'en';
-  const ct = COOKIE_TEXTS[l] || COOKIE_TEXTS.en;
-  const banner = document.createElement('div');
-  banner.id = 'cookie-banner';
-  banner.innerHTML = `<p>${ct.msg} <a href="/cookies.html">${ct.link}</a></p><div class="cookie-btns"><button class="cookie-reject" id="cb-reject">${ct.reject}</button><button class="cookie-accept" id="cb-accept">${ct.accept}</button></div>`;
-  document.body.appendChild(banner);
-  document.getElementById('cb-accept').onclick = function() {
-    localStorage.setItem('qurealm_cookies', 'accepted');
-    banner.remove();
-    loadGA();
-  };
-  document.getElementById('cb-reject').onclick = function() {
-    localStorage.setItem('qurealm_cookies', 'rejected');
-    banner.remove();
-  };
-}
-
-// ============================================================
 // INIT
 // ============================================================
 // Init language display
@@ -1669,7 +1614,6 @@ document.addEventListener('visibilitychange', function() {
   if (!document.hidden) applyTranslations();
 });
 renderGame();
-initCookieBanner();
 </script>
 </body>
 </html>
